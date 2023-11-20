@@ -1,12 +1,18 @@
 package ku.ux.scrapit.data
 
-data class Scrap(
-    var nickname : String,
-    var url : String,
-    var description : String,
-    var color : IndexColor,
-    var isFavorites : Boolean,
-    var isDeleted : Boolean,
-    var parentFolder : Folder,
-    var localPath : String? // local pdf file path. type can be changed
-)
+import io.realm.RealmObject
+import io.realm.annotations.PrimaryKey
+import java.io.Serializable
+
+open class Scrap : RealmObject() {
+    @PrimaryKey
+    var scrapId = 0
+    var nickname : String = ""
+    var url : String = ""
+    var description : String = ""
+    var color : String = IndexColor.BLUE.colorCode
+    var isFavorites : Boolean = false
+    var isDeleted : Boolean = false
+    var parentFolder : Folder? = null
+    var localPath : String = "" // local pdf file path. type can be changed
+}

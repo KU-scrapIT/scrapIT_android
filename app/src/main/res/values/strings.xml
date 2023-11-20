@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">ScrapIT</string>
+    <string name="all_scrap">모든 스크랩</string>
+    <string name="favorites">즐겨찾기</string>
+    <string name="save_local">로컬저장</string>
+    <string name="trash_bin">휴지통</string>
+    <string name="root_folder">루트 폴더</string>
 </resources>

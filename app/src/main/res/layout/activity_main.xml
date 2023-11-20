@@ -5,14 +5,181 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activity.MainActivity">
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!"
+    
+    <androidx.drawerlayout.widget.DrawerLayout
+        android:id="@+id/main_drawer"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageButton
+                android:id="@+id/main_menu_btn"
+                android:layout_width="27dp"
+                android:layout_height="27dp"
+                android:src="@drawable/menu_btn"
+                android:scaleType="fitCenter"
+                android:background="@color/transparent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_margin="20dp"/>
+
+            <TextView
+                android:id="@+id/main_folder_title_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="폴더"
+                app:layout_constraintTop_toTopOf="@id/main_menu_btn"
+                app:layout_constraintBottom_toBottomOf="@id/main_menu_btn"
+                app:layout_constraintStart_toEndOf="@+id/main_menu_btn"
+                android:layout_marginStart="25dp"
+                android:textColor="@color/black"
+                android:textSize="19dp"
+                android:fontFamily="@font/pretendard_bold"/>
+
+            <ImageButton
+                android:id="@+id/main_search_btn"
+                android:layout_width="27dp"
+                android:layout_height="27dp"
+                android:src="@drawable/search_btn"
+                android:scaleType="fitCenter"
+                android:background="@color/transparent"
+                app:layout_constraintEnd_toStartOf="@id/main_kebab_btn"
+                app:layout_constraintTop_toTopOf="@id/main_menu_btn"
+                app:layout_constraintBottom_toBottomOf="@id/main_menu_btn"
+                android:layout_marginEnd="10dp"/>
+
+            <ImageButton
+                android:id="@+id/main_kebab_btn"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/kebab_btn"
+                android:scaleType="fitCenter"
+                android:background="@color/transparent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/main_menu_btn"
+                app:layout_constraintBottom_toBottomOf="@id/main_menu_btn"
+                android:layout_marginEnd="20dp"/>
+
+            <ImageButton
+                android:id="@+id/main_add_scrap_btn"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_margin="10dp"
+                android:src="@drawable/add_scrap_btn"
+                android:scaleType="fitCenter"
+                android:background="@color/transparent"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <LinearLayout
+            android:layout_width="300dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            android:background="@color/white">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                
+                <ImageButton
+                    android:id="@+id/drawer_back_btn"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/back_btn"
+                    android:scaleType="fitCenter"
+                    android:background="@color/transparent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:layout_margin="15dp"/>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/drawer_all_scrap_btn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:layout_marginTop="60dp"
+                    android:theme="@style/Widget.AppCompat.Button.Borderless"
+                    android:background="@color/transparent"
+                    android:text="@string/all_scrap"
+                    android:textColor="@color/black"
+                    android:textSize="17dp"
+                    android:gravity="start|center"
+                    android:fontFamily="@font/pretendard_medium"
+                    app:icon="@drawable/ic_all_scrap"
+                    app:iconTint="@color/theme_blue"
+                    app:iconPadding="15dp"
+                    app:iconSize="22dp"/>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/drawer_favorites_btn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toStartOf="@id/drawer_all_scrap_btn"
+                    app:layout_constraintEnd_toEndOf="@id/drawer_all_scrap_btn"
+                    app:layout_constraintTop_toBottomOf="@id/drawer_all_scrap_btn"
+                    android:theme="@style/Widget.AppCompat.Button.Borderless"
+                    android:background="@color/transparent"
+                    android:text="@string/favorites"
+                    android:textColor="@color/black"
+                    android:textSize="17dp"
+                    android:gravity="start|center"
+                    android:fontFamily="@font/pretendard_medium"
+                    app:icon="@drawable/ic_favorites"
+                    app:iconTint="@color/theme_blue"
+                    app:iconPadding="15dp"
+                    app:iconSize="27dp"/>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/drawer_local_save_btn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toStartOf="@id/drawer_all_scrap_btn"
+                    app:layout_constraintEnd_toEndOf="@id/drawer_all_scrap_btn"
+                    app:layout_constraintTop_toBottomOf="@id/drawer_favorites_btn"
+                    android:theme="@style/Widget.AppCompat.Button.Borderless"
+                    android:background="@color/transparent"
+                    android:text="@string/save_local"
+                    android:textColor="@color/black"
+                    android:textSize="17dp"
+                    android:gravity="start|center"
+                    android:fontFamily="@font/pretendard_medium"
+                    app:icon="@drawable/ic_save"
+                    app:iconTint="@color/theme_blue"
+                    app:iconPadding="15dp"
+                    app:iconSize="27dp"/>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/drawer_trash_bin_btn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toStartOf="@id/drawer_all_scrap_btn"
+                    app:layout_constraintEnd_toEndOf="@id/drawer_all_scrap_btn"
+                    app:layout_constraintTop_toBottomOf="@id/drawer_local_save_btn"
+                    android:theme="@style/Widget.AppCompat.Button.Borderless"
+                    android:background="@color/transparent"
+                    android:text="@string/trash_bin"
+                    android:textColor="@color/black"
+                    android:textSize="17dp"
+                    android:gravity="start|center"
+                    android:fontFamily="@font/pretendard_medium"
+                    app:icon="@drawable/ic_trash_bin"
+                    app:iconTint="@color/bin_red"
+                    app:iconPadding="15dp"
+                    app:iconSize="27dp"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </LinearLayout>
+
+    </androidx.drawerlayout.widget.DrawerLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
