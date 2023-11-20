@@ -35,7 +35,7 @@
         android:id="@+id/mk_scrap_comp_btn"
         android:layout_width="50dp"
         android:layout_height="35dp"
-        android:backgroundTint="@color/light_blue_theme"
+        android:backgroundTint="@color/theme_blue"
         android:text="완료"
         android:textSize="10dp"
         android:padding="0dp"

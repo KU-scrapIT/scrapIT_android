@@ -3,7 +3,7 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="transparent">#00000000</color>
-    <color name="light_blue_theme">#ACCBE1</color>
+    <color name="theme_blue">#ACCBE1</color>
     <color name="bin_red">#F19C9C</color>
     <color name="orange_theme">#ff7f00</color>
     <color name="dark_gray_theme">#5F5F5F</color>
