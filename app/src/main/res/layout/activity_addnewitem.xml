@@ -224,7 +224,7 @@
         android:layout_width="20dp"
         android:layout_height="20dp"
         android:background="@drawable/circle"
-        android:backgroundTint="@color/gray_theme"
+        android:backgroundTint="@color/grey_theme"
         android:padding="2dp"
         android:src="@drawable/check"
         app:layout_constraintEnd_toStartOf="@+id/setting_theme_dark_gray_iv9"

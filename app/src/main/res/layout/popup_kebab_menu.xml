@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:rowCount="3"
+    android:columnCount="1">
+
+    <Button
+        android:id="@+id/kebab_edit_menu"
+        android:layout_width="123dp"
+        android:layout_height="40dp"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:text="@string/edit"
+        android:textColor="@color/black"
+        android:textSize="13dp"
+        android:gravity="left"
+        android:paddingLeft="10dp"
+        android:fontFamily="@font/pretendard_regular"/>
+
+    <Button
+        android:id="@+id/kebab_add_folder_menu"
+        android:layout_width="123dp"
+        android:layout_height="40dp"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:text="@string/add_folder"
+        android:textColor="@color/black"
+        android:textSize="13dp"
+        android:gravity="left"
+        android:paddingLeft="10dp"
+        android:fontFamily="@font/pretendard_regular"/>
+
+    <Button
+        android:id="@+id/kebab_see_local_file_menu"
+        android:layout_width="123dp"
+        android:layout_height="40dp"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:text="@string/see_local_save"
+        android:textColor="@color/black"
+        android:textSize="13dp"
+        android:gravity="left"
+        android:paddingLeft="10dp"
+        android:fontFamily="@font/pretendard_regular"/>
+
+</GridLayout>

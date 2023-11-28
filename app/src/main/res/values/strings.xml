@@ -5,4 +5,9 @@
     <string name="save_local">로컬저장</string>
     <string name="trash_bin">휴지통</string>
     <string name="root_folder">루트 폴더</string>
+    <string name="folder">폴더</string>
+    <string name="scrap">스크랩</string>
+    <string name="edit">편집</string>
+    <string name="add_folder">폴더 추가</string>
+    <string name="see_local_save">영구 저장 보기</string>
 </resources>
