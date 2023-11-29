@@ -34,6 +34,7 @@ class ScrapITApplication : Application() {
         val pref = applicationContext.getSharedPreferences("storage", Context.MODE_PRIVATE)
         currentFolderId = pref.getInt("currentFolderId", -1)
 
+
         val realm = Realm.getDefaultInstance()
         val rootFolderId = -1
         rootFolder = realm.where(Folder::class.java).equalTo("folderId", rootFolderId).findFirst() ?: Folder()
