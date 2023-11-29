@@ -5,6 +5,7 @@ import android.app.Activity
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 
 import android.os.Bundle
 import android.text.Editable
@@ -56,22 +57,21 @@ class AddNewItemActivity : AppCompatActivity(){
             binding.settingThemePinkIv7, binding.settingThemeGrayIv8, binding.settingThemeDarkGrayIv9)
 
         //뒤로 가기 버튼
-        binding.newScrapBackIbtn.setOnClickListener {
-            finish()
-        }
         setInitByIntent()
         textSizeUpdate()
         colorSelect()
         //버튼 mk_scrap_comp_btn 클릭 시 완료
         binding.mkScrapCompBtn.setOnClickListener{
-            val intent = intent
+//            val intent = intent
             val folderId = intent.getIntExtra("folder", 0)
             val scrapId = intent.getIntExtra("scrap", 0)
 
             if(folderId != 0) saveFolder()
             else if (scrapId !=0 ) saveScrap()
-
             setResult(Activity.RESULT_OK, null) // 결과 코드와 결과 Intent 설정
+            finish()
+        }
+        binding.newScrapBackIbtn.setOnClickListener {
             finish()
         }
     }
@@ -95,8 +95,6 @@ class AddNewItemActivity : AppCompatActivity(){
         realm.copyToRealmOrUpdate(folder)
         realm.commitTransaction()
     }
-
-
     private fun colorSelect() {
         for (imageView in imageviews) {
             imageView.setOnClickListener {
@@ -108,7 +106,6 @@ class AddNewItemActivity : AppCompatActivity(){
                         otherImageView.setImageDrawable(null)
                     }
                 }
-
                 val curColor: Int? = imageView.backgroundTintList?.defaultColor
 
                 // null 체크를 수행하여 안전하게 처리
@@ -145,8 +142,6 @@ class AddNewItemActivity : AppCompatActivity(){
         })
 
         //현재 글자 수 / 최대 글자 수 나타내기
-//        explain_editText = findViewById(R.id.explain_ET) // EditText의 ID
-//        explain_textView = findViewById(R.id.explain_textcount_TV)
         val explainMaxCharCount = 20 // 최대 입력 문자 수
 
         binding.explainET.addTextChangedListener(object : TextWatcher {
@@ -165,10 +160,25 @@ class AddNewItemActivity : AppCompatActivity(){
 
     private fun setColor(givenColor: String) {
         //기본적으로 새로 만들때에는 default로 RED 설정하는데 편집 시에는 변수를 입력하여야 함.
-        for(imageView in imageviews){
-            //들어온 값에 체크 표시
-            if(imageView.backgroundTintList?.defaultColor == Color.parseColor(givenColor)) continue
-            else imageView.setImageDrawable(null)
+        Toast.makeText(this, "현재 색상: $givenColor", Toast.LENGTH_SHORT).show()
+        val parsedColor = Color.parseColor(givenColor)
+        for (imageView in imageviews) {
+            // 들어온 값에 체크 표시
+            val colorDrawable = imageView.background
+
+            if (colorDrawable is ColorDrawable) {
+                val colorParsedToInt = colorDrawable.color
+
+                if (colorParsedToInt == parsedColor) {
+                    imageView.setImageResource(R.drawable.check)
+                } else {
+                    // 배경색이 일치하지 않으면 이미지 초기화
+                    imageView.setImageDrawable(null)
+                }
+            } else {
+                // 배경이 ColorDrawable이 아닌 경우에도 이미지 초기화
+                imageView.setImageDrawable(null)
+            }
         }
     }
 
@@ -194,7 +204,7 @@ class AddNewItemActivity : AppCompatActivity(){
     }
 
     private fun initNewScrapWithUrl(isUrl: String, parentFolder : Int) {
-        val realm = Realm.getDefaultInstance()
+//        val realm = Realm.getDefaultInstance()
         val parentFolder: Folder? = realm.where(Folder::class.java).equalTo("folderId", parentFolder).findFirst()
 
         binding.titleTV.text = "새 스크랩"
@@ -202,12 +212,15 @@ class AddNewItemActivity : AppCompatActivity(){
         binding.urlET.setText(isUrl)
         scrap.scrapId = 100 //  임시
         scrap.parentFolder = parentFolder
-        realm.close()
+        realm.beginTransaction()
+        parentFolder?.scrapList?.add(scrap)
+        realm.commitTransaction()
+//        realm.close()
     }
 
     private fun initNewScrap(parentFolder : Int) {
 
-        val realm = Realm.getDefaultInstance()
+//        val realm = Realm.getDefaultInstance()
         val parentFolder: Folder? = realm.where(Folder::class.java).equalTo("folderId", parentFolder).findFirst()
         binding.titleTV.text = "새 스크랩"
         setColor(IndexColor.RED.colorCode)
@@ -216,10 +229,10 @@ class AddNewItemActivity : AppCompatActivity(){
         realm.beginTransaction()
         parentFolder?.scrapList?.add(scrap)
         realm.commitTransaction()
-        realm.close()
+//        realm.close()
     }
     private fun initNewFolder(parentFolderId : Int) {
-        val realm = Realm.getDefaultInstance()
+//        val realm = Realm.getDefaultInstance()
         val parentFolder: Folder? = realm.where(Folder::class.java).equalTo("folderId", parentFolderId).findFirst()
 
         binding.titleTV.text = "새 폴더"
@@ -227,7 +240,7 @@ class AddNewItemActivity : AppCompatActivity(){
         folder.folderId = 100
         folder.parentFolder = parentFolder
         hideUrl()
-        realm.close()
+//        realm.close()
     }
     private fun hideUrl(){
         binding.urlET.visibility = View.GONE
@@ -235,7 +248,7 @@ class AddNewItemActivity : AppCompatActivity(){
     }
     private fun initExistScrap(scrapId: Int) {
 
-        val realm = Realm.getDefaultInstance()
+//        val realm = Realm.getDefaultInstance()
         val exScrap = realm.where(Scrap::class.java).equalTo("scrapId",scrapId).findFirst()
         binding.titleTV.text = "스크랩"
         if (exScrap != null) {
@@ -244,6 +257,9 @@ class AddNewItemActivity : AppCompatActivity(){
             scrap.isFavorites = exScrap.isFavorites
             scrap.isDeleted = exScrap.isDeleted
             scrap.parentFolder = exScrap.parentFolder
+            realm.beginTransaction()
+            exScrap.parentFolder?.scrapList?.add(scrap)
+            realm.commitTransaction()
             scrap.localPath = exScrap.localPath
             //각 필드에 해당 값 올려두기
             binding.nicknameET.setText(exScrap.nickname)
@@ -251,11 +267,11 @@ class AddNewItemActivity : AppCompatActivity(){
             binding.urlET.setText(exScrap.url)
             setColor(exScrap.color)
         }
-        realm.close()
+//        realm.close()
     }
     private fun initExistFolder(folderId: Int) {
         binding.titleTV.text = "폴더"
-        val realm = Realm.getDefaultInstance()
+//        val realm = Realm.getDefaultInstance()
         val existingFolder = realm.where(Folder::class.java).equalTo("folderId",folderId).findFirst()
         if (existingFolder != null) {
             //기본정보 미리 저장
