@@ -9,6 +9,7 @@ import android.graphics.Color
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.View
 import android.widget.EditText
 import android.widget.ImageView
@@ -172,7 +173,6 @@ class AddNewItemActivity : AppCompatActivity(){
     }
 
     private fun setInitByIntent() {
-        val intent = intent
         val folderId = intent.getIntExtra("folder", 0)
         val scrapId = intent.getIntExtra("scrap", 0)
         val isUrl = intent.getStringExtra("url")
@@ -183,7 +183,7 @@ class AddNewItemActivity : AppCompatActivity(){
         }else if(scrapId > 0){//이미 존재하는 scrap
             initExistScrap(scrapId)
         }else if(scrapId < 0){//새로운 스크랩 생성
-            if(isUrl != null) { // URL을 가진 채로 시작
+            if(!isUrl.isNullOrEmpty()) { // URL을 가진 채로 시작
                 initNewScrapWithUrl(isUrl, parentFolder)
             }else{  //  URL 없이 시작
                 initNewScrap(parentFolder)
@@ -194,7 +194,6 @@ class AddNewItemActivity : AppCompatActivity(){
     }
 
     private fun initNewScrapWithUrl(isUrl: String, parentFolder : Int) {
-
         val realm = Realm.getDefaultInstance()
         val parentFolder: Folder? = realm.where(Folder::class.java).equalTo("folderId", parentFolder).findFirst()
 
@@ -214,6 +213,9 @@ class AddNewItemActivity : AppCompatActivity(){
         setColor(IndexColor.RED.colorCode)
         scrap.scrapId = 100 //  임시
         scrap.parentFolder = parentFolder
+        realm.beginTransaction()
+        parentFolder?.scrapList?.add(scrap)
+        realm.commitTransaction()
         realm.close()
     }
     private fun initNewFolder(parentFolderId : Int) {

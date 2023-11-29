@@ -80,12 +80,12 @@
             
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/main_folder_recycler_view"
-                android:layout_width="365dp"
+                android:layout_width="0dp"
                 android:layout_height="70dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/main_folder_mini_title_tv"
-                android:layout_marginTop="5dp"
+                android:layout_margin="5dp"
                 tools:listitem="@layout/item_scrap"/>
 
             <TextView
@@ -102,12 +102,12 @@
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/main_scrap_recycler_view"
-                android:layout_width="365dp"
+                android:layout_width="0dp"
                 android:layout_height="70dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/main_scrap_mini_title_tv"
-                android:layout_marginTop="5dp"
+                android:layout_margin="5dp"
                 tools:listitem="@layout/item_scrap"/>
 
             <ImageButton

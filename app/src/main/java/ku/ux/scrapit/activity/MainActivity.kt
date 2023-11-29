@@ -1,13 +1,17 @@
 package ku.ux.scrapit.activity
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.Gravity
 import android.view.ViewGroup
+import android.view.animation.LinearInterpolator
 import android.widget.PopupWindow
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.view.GravityCompat
+import androidx.recyclerview.widget.LinearLayoutManager
 import io.realm.Realm
 import ku.ux.scrapit.R
 import ku.ux.scrapit.data.Folder
@@ -46,17 +50,19 @@ class MainActivity : AppCompatActivity() {
             intent.putExtra("parentFolder", -1)
             intent.putExtra("folder", 0)
             intent.putExtra("url", "")
-            startActivityForResult(intent, RESULT_OK)
+            startActivityForResult(intent, 100)
         }
 
+        binding.mainScrapRecyclerView.layoutManager = LinearLayoutManager(this)
         binding.mainScrapRecyclerView.adapter = ScrapRVAdapter(currentFolder.scrapList)
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if(requestCode == RESULT_OK) {
-
+        if(resultCode == RESULT_OK) {
+            binding.mainScrapRecyclerView.adapter?.notifyDataSetChanged()
         }
     }
 
