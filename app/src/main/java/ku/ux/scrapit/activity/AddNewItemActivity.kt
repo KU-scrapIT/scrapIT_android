@@ -239,6 +239,9 @@ class AddNewItemActivity : AppCompatActivity(){
         setColor(IndexColor.RED.colorCode)
         folder.folderId = 100
         folder.parentFolder = parentFolder
+        realm.beginTransaction()
+        parentFolder?.childFolderList?.add(folder)
+        realm.commitTransaction()
         hideUrl()
 //        realm.close()
     }

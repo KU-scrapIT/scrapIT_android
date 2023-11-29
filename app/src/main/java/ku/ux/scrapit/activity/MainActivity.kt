@@ -20,6 +20,7 @@ import ku.ux.scrapit.data.IndexColor
 import ku.ux.scrapit.data.Scrap
 import ku.ux.scrapit.databinding.ActivityMainBinding
 import ku.ux.scrapit.databinding.PopupKebabMenuBinding
+import ku.ux.scrapit.etc.FolderRVAdapter
 import ku.ux.scrapit.etc.ScrapITApplication.Companion.currentFolderId
 import ku.ux.scrapit.etc.ScrapRVAdapter
 
@@ -56,6 +57,9 @@ class MainActivity : AppCompatActivity() {
 
         binding.mainScrapRecyclerView.layoutManager = LinearLayoutManager(this)
         binding.mainScrapRecyclerView.adapter = ScrapRVAdapter(currentFolder.scrapList)
+
+        binding.mainFolderRecyclerView.layoutManager = LinearLayoutManager(this)
+        binding.mainFolderRecyclerView.adapter = FolderRVAdapter(currentFolder.childFolderList)
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -64,6 +68,7 @@ class MainActivity : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
         if(resultCode == RESULT_OK) {
             binding.mainScrapRecyclerView.adapter?.notifyDataSetChanged()
+            binding.mainFolderRecyclerView.adapter?.notifyDataSetChanged()
         }
     }
 
@@ -112,10 +117,12 @@ class MainActivity : AppCompatActivity() {
         binding.mainEditBar.visibility = View.VISIBLE
         binding.mainAddScrapBtn.visibility = View.INVISIBLE
         (binding.mainScrapRecyclerView.adapter as ScrapRVAdapter).turnOnEditMode()
+        (binding.mainFolderRecyclerView.adapter as FolderRVAdapter).turnOnEditMode()
 
         binding.mainEditBtn.setOnClickListener {}
         binding.mainCheckAllCb.setOnCheckedChangeListener { _, b ->
             (binding.mainScrapRecyclerView.adapter as ScrapRVAdapter).isCheckAllItem(b)
+            (binding.mainFolderRecyclerView.adapter as FolderRVAdapter).isCheckAllItem(b)
         }
     }
 
@@ -129,6 +136,7 @@ class MainActivity : AppCompatActivity() {
         binding.mainEditBar.visibility = View.GONE
         binding.mainAddScrapBtn.visibility = View.VISIBLE
         (binding.mainScrapRecyclerView.adapter as ScrapRVAdapter).turnOffEditMode()
+        (binding.mainFolderRecyclerView.adapter as FolderRVAdapter).turnOffEditMode()
     }
 
 }

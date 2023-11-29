@@ -3,7 +3,8 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:rowCount="3"
-    android:columnCount="1">
+    android:columnCount="1"
+    android:background="@color/white">
 
     <Button
         android:id="@+id/kebab_edit_menu"
