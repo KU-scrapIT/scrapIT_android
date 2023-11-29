@@ -10,8 +10,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
+import io.realm.Realm
 import ku.ux.scrapit.custom_view.WebFragment
+import ku.ux.scrapit.data.Folder
 import ku.ux.scrapit.databinding.ActivityStackBinding
+import ku.ux.scrapit.etc.ScrapITApplication
 import ku.ux.scrapit.etc.StackBtnAdapter
 
 class StackActivity : AppCompatActivity() {
@@ -29,6 +32,8 @@ class StackActivity : AppCompatActivity() {
     private var originalY: Float = 0.toFloat()
 
     private var urlList = arrayOf("https://www.google.com", "https://www.google.com", "https://www.google.com")
+    private lateinit var folderIds : List<Int>
+    private lateinit var folderNames : List<String>
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,20 +41,19 @@ class StackActivity : AppCompatActivity() {
         binding = ActivityStackBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // 리사이클러뷰 초기화
-        val recyclerView: RecyclerView = binding.stackRecyclerView
+        // 스택 웹뷰에 들어갈 즐겨찾기 폴더 초기화
+        folderIds = getFavoriteFolders()
+        folderNames = getFolderNames()
+
 
         // 폴더 이름 데이터 생성
-        val folderIds = listOf("폴더 1", "폴더 2", "폴더 3")
-
-        // 어댑터 생성
-        val adapter = StackBtnAdapter(folderIds)
+        val folderNames = listOf("폴더 1", "폴더 2", "폴더 3", "폴더 4")
 
         // 리사이클러뷰에 어댑터 설정
-        recyclerView.adapter = adapter
+        binding.stackRecyclerView.adapter = StackBtnAdapter(folderNames)
 
         // 레이아웃 매니저 설정
-        recyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        binding.stackRecyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
 
         val pagerAdapter = object : FragmentStateAdapter(this) {
             override fun getItemCount() = urlList.size
@@ -139,5 +143,75 @@ class StackActivity : AppCompatActivity() {
                 }
             }
             .start()
+    }
+
+    private fun getFavoriteFolders(): List<Int>{
+        val realm = Realm.getDefaultInstance()
+        val favoriteFolders = realm.where(Folder::class.java)
+            .equalTo("isFavorites", true)
+            .findAll()
+        val favoriteFolderIds = mutableListOf<Int>()
+
+        for (folder in favoriteFolders) {
+            favoriteFolderIds.add(folder.folderId)
+        }
+
+        return favoriteFolderIds
+    }
+
+    fun getUrls(targetFolderId: Int): List<String>{
+        val realm = Realm.getDefaultInstance()
+        val targetFolder = realm.where(Folder::class.java)
+            .equalTo("folderId", targetFolderId)
+            .findFirst()
+
+        if(targetFolder != null) {
+            return targetFolder.scrapList.map { it.url }
+        } else {
+            return emptyList() // 폴더가 존재하지 않으면 빈 리스트 반환
+        }
+
+    }
+
+    fun getFolderNames(): List<String>{
+        val realm = Realm.getDefaultInstance()
+        val folderNameList = mutableListOf<String>()
+
+        for (id in folderIds) {
+            val folder = realm.where(Folder::class.java)
+                .equalTo("folderId", id)
+                .findFirst()
+
+            // folderId에 해당하는 폴더가 존재하면 nicknameList에 추가
+            if (folder != null) {
+                folderNameList.add(folder.nickname)
+            }
+        }
+        return folderNameList
+    }
+
+    fun updateViewPagerContent(folderName: String) {
+        (binding.stackRecyclerView.adapter as StackBtnAdapter).setOnItemClickListener(object : StackBtnAdapter.OnItemClickListener {
+            override fun itemClicked(pos : Int) {
+                val targetFolderId = folderIds[pos]
+                val targetFolderUrls = getUrls(targetFolderId)
+
+                // 가져온 URL 리스트로 WebFragment를 생성하여 ViewPager에 설정
+                val pagerAdapter = object : FragmentStateAdapter(this@StackActivity) {
+                    override fun getItemCount() = targetFolderUrls.size
+
+                    override fun createFragment(position: Int): Fragment {
+                        return WebFragment(targetFolderUrls[position])
+                    }
+                }
+
+                binding.stackViewPager.adapter = pagerAdapter
+
+                // 원하는 페이지(첫 페이지)로 이동
+                binding.stackViewPager.post {
+                    binding.stackViewPager.setCurrentItem(0, false)
+                }
+            }
+        })
     }
 }
