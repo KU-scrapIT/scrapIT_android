@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.Gravity
+import android.view.View
 import android.view.ViewGroup
 import android.view.animation.LinearInterpolator
 import android.widget.PopupWindow
@@ -47,7 +48,7 @@ class MainActivity : AppCompatActivity() {
         binding.mainAddScrapBtn.setOnClickListener {
             val intent = Intent(this, AddNewItemActivity::class.java)
             intent.putExtra("scrap", -1)
-            intent.putExtra("parentFolder", -1)
+            intent.putExtra("parentFolder", currentFolderId)
             intent.putExtra("folder", 0)
             intent.putExtra("url", "")
             startActivityForResult(intent, 100)
@@ -79,8 +80,55 @@ class MainActivity : AppCompatActivity() {
             ViewGroup.LayoutParams.WRAP_CONTENT,
             true
         )
+        popupBinding.kebabAddFolderMenu.setOnClickListener {
+            val intent = Intent(this, AddNewItemActivity::class.java)
+            intent.putExtra("scrap", 0)
+            intent.putExtra("parentFolder", currentFolderId)
+            intent.putExtra("folder", -1)
+            intent.putExtra("url", "")
+            startActivityForResult(intent, 100)
+            popupWindow.dismiss()
+        }
+        popupBinding.kebabEditMenu.setOnClickListener {
+            startEditMode()
+            popupWindow.dismiss()
+        }
         popupWindow.elevation = 50f
         popupWindow.showAsDropDown(binding.mainKebabBtn)
+    }
+
+    override fun onBackPressed() {
+       // super.onBackPressed()
+        endEditMode()
+    }
+
+    private fun startEditMode() {
+        binding.mainMenuBtn.visibility = View.INVISIBLE
+        binding.mainFolderTitleTv.visibility = View.INVISIBLE
+        binding.mainSearchBtn.visibility = View.INVISIBLE
+        binding.mainKebabBtn.visibility = View.INVISIBLE
+        binding.mainCheckAllCb.visibility = View.VISIBLE
+        binding.mainCheckAllTv.visibility = View.VISIBLE
+        binding.mainEditBar.visibility = View.VISIBLE
+        binding.mainAddScrapBtn.visibility = View.INVISIBLE
+        (binding.mainScrapRecyclerView.adapter as ScrapRVAdapter).turnOnEditMode()
+
+        binding.mainEditBtn.setOnClickListener {}
+        binding.mainCheckAllCb.setOnCheckedChangeListener { _, b ->
+            (binding.mainScrapRecyclerView.adapter as ScrapRVAdapter).isCheckAllItem(b)
+        }
+    }
+
+    private fun endEditMode() {
+        binding.mainMenuBtn.visibility = View.VISIBLE
+        binding.mainFolderTitleTv.visibility = View.VISIBLE
+        binding.mainSearchBtn.visibility = View.VISIBLE
+        binding.mainKebabBtn.visibility = View.VISIBLE
+        binding.mainCheckAllCb.visibility = View.GONE
+        binding.mainCheckAllTv.visibility = View.GONE
+        binding.mainEditBar.visibility = View.GONE
+        binding.mainAddScrapBtn.visibility = View.VISIBLE
+        (binding.mainScrapRecyclerView.adapter as ScrapRVAdapter).turnOffEditMode()
     }
 
 }

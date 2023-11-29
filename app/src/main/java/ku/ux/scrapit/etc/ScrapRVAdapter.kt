@@ -7,7 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import io.realm.Realm.init
 import io.realm.RealmList
 import ku.ux.scrapit.data.Scrap
 import ku.ux.scrapit.databinding.ItemScrapBinding
@@ -16,6 +15,9 @@ import kotlin.math.log
 class ScrapRVAdapter(list : RealmList<Scrap>) : RecyclerView.Adapter<ScrapRVAdapter.ViewHolder>() {
 
     private val scrapList = list
+    private var isEditMode = false
+    private var isAllChecked = false
+    private val checkedItemList = HashSet<Int>()
 
     inner class ViewHolder(private val binding : ItemScrapBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(pos : Int) {
@@ -27,10 +29,29 @@ class ScrapRVAdapter(list : RealmList<Scrap>) : RecyclerView.Adapter<ScrapRVAdap
             if(!scrap.isFavorites) binding.scrapFavoritesIv.visibility = View.INVISIBLE
             else binding.scrapFavoritesIv.visibility = View.VISIBLE
 
-            binding.scrapIconTv.text = scrap.nickname[0].toString()
+            if(scrap.nickname.isNotEmpty())
+                binding.scrapIconTv.text = scrap.nickname[0].toString()
+            else
+                binding.scrapIconTv.text = ""
+
             binding.scrapIconTv.backgroundTintList = ColorStateList.valueOf(Color.parseColor(scrap.color))
             binding.scrapTitleTv.text = scrap.nickname
             binding.scrapDescriptionTv.text = scrap.description
+
+            if(isEditMode) {
+                binding.scrapSwitcher.visibility = View.INVISIBLE
+                binding.scrapCheckbox.visibility = View.VISIBLE
+                binding.scrapCheckbox.isChecked = isAllChecked
+            } else {
+                binding.scrapCheckbox.isChecked = false
+                binding.scrapSwitcher.visibility = View.VISIBLE
+                binding.scrapCheckbox.visibility = View.INVISIBLE
+            }
+
+            binding.scrapCheckbox.setOnCheckedChangeListener { _, b ->
+                if(b) checkedItemList.add(scrap.scrapId)
+                else checkedItemList.remove(scrap.scrapId)
+            }
         }
     }
 
@@ -44,6 +65,25 @@ class ScrapRVAdapter(list : RealmList<Scrap>) : RecyclerView.Adapter<ScrapRVAdap
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         Log.d("isoo", "onBindViewHolder: $position")
         holder.bind(position)
+    }
+
+    fun turnOnEditMode() {
+        isEditMode = true
+        notifyDataSetChanged()
+    }
+
+    fun turnOffEditMode() {
+        isEditMode = false
+        notifyDataSetChanged()
+    }
+
+    fun isCheckAllItem(isCheck : Boolean) {
+        isAllChecked = isCheck
+        notifyDataSetChanged()
+    }
+
+    fun getCheckedScraps() : List<Int> {
+        return checkedItemList.toList()
     }
 
 }
