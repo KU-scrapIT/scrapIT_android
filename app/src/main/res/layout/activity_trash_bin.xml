@@ -64,7 +64,7 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf=""
+                app:layout_constraintTop_toBottomOf="parent"
                 android:layout_margin="5dp"
                 tools:listitem="@layout/item_scrap"
                 tools:itemCount="4"/>

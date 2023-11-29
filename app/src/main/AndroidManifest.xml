@@ -16,7 +16,7 @@
         android:theme="@style/Theme.ScrapIT"
         tools:targetApi="31">
         <activity
-            android:name=".activity.StackActivity"
+            android:name=".activity.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -27,8 +27,8 @@
             android:exported="true"/>
         <activity android:name=".activity.SearchActivity"
             android:exported="true"/>
-<!--        <activity android:name=".activity.StackActivity"-->
-<!--            android:exported="true"/>-->
+        <activity android:name=".activity.StackActivity"
+            android:exported="true"/>
     </application>
 
 </manifest>
