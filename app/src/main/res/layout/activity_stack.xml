@@ -37,13 +37,13 @@
         app:layout_constraintBottom_toBottomOf="@+id/stack_fab_btn"
         app:layout_constraintStart_toEndOf="@+id/stack_fab_btn"
         app:layout_constraintEnd_toEndOf="parent"
-        android:visibility="gone"
+        android:visibility="visible"
         android:scrollbars="none"
         app:layout_constraintHorizontal_bias="0.0">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/stack_fab_open"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
             <ImageButton
@@ -72,6 +72,8 @@
                 app:layout_constraintEnd_toEndOf="@+id/stack_fab_out_btn"
                 android:text="나가기"
                 android:textSize="11dp"
+                android:shadowColor="@color/white"
+                android:shadowRadius="4"
                 android:fontFamily="@font/pretendard_regular"
                 android:layout_marginTop="3dp" />
 
@@ -84,9 +86,11 @@
                 app:layout_constraintEnd_toStartOf="@id/stack_fab_add_btn"
                 android:orientation="horizontal"
                 tools:listitem="@layout/item_stacks"
-                tools:itemCount="2"
+                tools:itemCount="1"
                 app:layout_constraintHorizontal_bias="0.0"
-                android:scrollbars="none"/>
+                android:scrollbars="none"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"/>
 
             <ImageButton
                 android:id="@+id/stack_fab_add_btn"
@@ -115,6 +119,8 @@
                 app:layout_constraintEnd_toEndOf="@+id/stack_fab_add_btn"
                 android:text="스크랩 추가"
                 android:textSize="11dp"
+                android:shadowColor="@color/white"
+                android:shadowRadius="4"
                 android:fontFamily="@font/pretendard_regular"
                 android:layout_marginTop="3dp" />
 
