@@ -33,7 +33,7 @@
                 android:id="@+id/main_folder_title_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="폴더"
+                android:text="@string/folder"
                 app:layout_constraintTop_toTopOf="@id/main_menu_btn"
                 app:layout_constraintBottom_toBottomOf="@id/main_menu_btn"
                 app:layout_constraintStart_toEndOf="@+id/main_menu_btn"
@@ -65,6 +65,50 @@
                 app:layout_constraintTop_toTopOf="@id/main_menu_btn"
                 app:layout_constraintBottom_toBottomOf="@id/main_menu_btn"
                 android:layout_marginEnd="20dp"/>
+
+            <TextView
+                android:id="@+id/main_folder_mini_title_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/folder"
+                android:fontFamily="@font/pretendard_bold"
+                android:textSize="12dp"
+                android:textColor="#A7A7A7"
+                app:layout_constraintStart_toStartOf="@id/main_menu_btn"
+                app:layout_constraintTop_toBottomOf="@id/main_menu_btn"
+                android:layout_marginTop="40dp"/>
+            
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/main_folder_recycler_view"
+                android:layout_width="365dp"
+                android:layout_height="70dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/main_folder_mini_title_tv"
+                android:layout_marginTop="5dp"
+                tools:listitem="@layout/item_scrap"/>
+
+            <TextView
+                android:id="@+id/main_scrap_mini_title_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/scrap"
+                android:fontFamily="@font/pretendard_bold"
+                android:textSize="12dp"
+                android:textColor="#A7A7A7"
+                app:layout_constraintStart_toStartOf="@id/main_menu_btn"
+                app:layout_constraintTop_toBottomOf="@id/main_folder_recycler_view"
+                android:layout_marginTop="20dp"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/main_scrap_recycler_view"
+                android:layout_width="365dp"
+                android:layout_height="70dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/main_scrap_mini_title_tv"
+                android:layout_marginTop="5dp"
+                tools:listitem="@layout/item_scrap"/>
 
             <ImageButton
                 android:id="@+id/main_add_scrap_btn"

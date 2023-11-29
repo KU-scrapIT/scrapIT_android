@@ -7,7 +7,7 @@ import java.io.Serializable
 
 open class Folder : RealmObject() {
     @PrimaryKey
-    var folderId = 0
+    var folderId = -1
     var nickname : String = ""
     var description : String = ""
     var color : String = IndexColor.BLUE.colorCode
