@@ -16,9 +16,6 @@ class ScrapITApplication : Application() {
             .deleteRealmIfMigrationNeeded()
             .build()
         Realm.setDefaultConfiguration(config)
-
-
-
     }
 
 }
