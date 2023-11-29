@@ -67,48 +67,237 @@
                 android:layout_marginEnd="20dp"/>
 
             <TextView
-                android:id="@+id/main_folder_mini_title_tv"
+                android:id="@+id/main_check_all_tv"
+                android:visibility="gone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/folder"
+                app:layout_constraintTop_toTopOf="@id/main_check_all_cb"
+                app:layout_constraintBottom_toBottomOf="@id/main_check_all_cb"
+                app:layout_constraintEnd_toStartOf="@id/main_check_all_cb"
+                android:text="@string/check_all"
+                android:textSize="18dp"
                 android:fontFamily="@font/pretendard_bold"
-                android:textSize="12dp"
-                android:textColor="#A7A7A7"
-                app:layout_constraintStart_toStartOf="@id/main_menu_btn"
+                android:textColor="@color/black"
+                android:layout_marginEnd="12dp"/>
+
+            <CheckBox
+                android:id="@+id/main_check_all_cb"
+                android:visibility="gone"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/main_kebab_btn"
+                app:layout_constraintBottom_toBottomOf="@id/main_kebab_btn"
+                android:background="@drawable/checkbox"
+                android:button="@color/transparent"
+                android:layout_marginEnd="20dp"
+                android:checked="false"/>
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
                 app:layout_constraintTop_toBottomOf="@id/main_menu_btn"
-                android:layout_marginTop="40dp"/>
-            
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/main_folder_recycler_view"
-                android:layout_width="0dp"
-                android:layout_height="70dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginTop="40dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/main_folder_mini_title_tv"
-                android:layout_margin="5dp"
-                tools:listitem="@layout/item_scrap"/>
+                android:scrollbars="none">
 
-            <TextView
-                android:id="@+id/main_scrap_mini_title_tv"
-                android:layout_width="wrap_content"
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:id="@+id/main_folder_mini_title_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/folder"
+                        android:fontFamily="@font/pretendard_bold"
+                        android:textSize="12dp"
+                        android:textColor="#A7A7A7"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        android:layout_marginStart="20dp"/>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/main_folder_recycler_view"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/main_folder_mini_title_tv"
+                        android:layout_margin="5dp"
+                        tools:listitem="@layout/item_scrap"
+                        tools:itemCount="4"/>
+
+                    <TextView
+                        android:id="@+id/main_scrap_mini_title_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/scrap"
+                        android:fontFamily="@font/pretendard_bold"
+                        android:textSize="12dp"
+                        android:textColor="#A7A7A7"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/main_folder_recycler_view"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginTop="20dp"/>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/main_scrap_recycler_view"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/main_scrap_mini_title_tv"
+                        android:layout_margin="5dp"
+                        tools:listitem="@layout/item_scrap"
+                        tools:itemCount="4"/>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </ScrollView>
+
+            <GridLayout
+                android:id="@+id/main_edit_bar"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/scrap"
-                android:fontFamily="@font/pretendard_bold"
-                android:textSize="12dp"
-                android:textColor="#A7A7A7"
-                app:layout_constraintStart_toStartOf="@id/main_menu_btn"
-                app:layout_constraintTop_toBottomOf="@id/main_folder_recycler_view"
-                android:layout_marginTop="20dp"/>
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/main_scrap_recycler_view"
-                android:layout_width="0dp"
-                android:layout_height="70dp"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/main_scrap_mini_title_tv"
-                android:layout_margin="5dp"
-                tools:listitem="@layout/item_scrap"/>
+                android:rowCount="1"
+                android:columnCount="6"
+                android:layout_marginBottom="20dp"
+                android:visibility="gone"
+                android:background="@color/white">
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_columnWeight="1"
+                    android:gravity="center">
+                    <ImageButton
+                        android:id="@+id/main_move_btn"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:src="@drawable/ic_move"
+                        android:scaleType="fitCenter"
+                        android:background="@color/transparent"/>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/move"
+                        android:textSize="10dp"
+                        android:textAlignment="center"
+                        android:textColor="@color/grey_icon"
+                        android:fontFamily="@font/pretendard_semi_bold"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_columnWeight="1"
+                    android:gravity="center">
+                    <ImageButton
+                        android:id="@+id/main_copy_btn"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:src="@drawable/ic_copy"
+                        android:scaleType="fitCenter"
+                        android:background="@color/transparent"/>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/copy"
+                        android:textSize="10dp"
+                        android:textAlignment="center"
+                        android:textColor="@color/grey_icon"
+                        android:fontFamily="@font/pretendard_semi_bold"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_columnWeight="1"
+                    android:gravity="center">
+                    <ImageButton
+                        android:id="@+id/main_edit_btn"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:src="@drawable/ic_edit"
+                        android:scaleType="fitCenter"
+                        android:background="@color/transparent"/>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/edit"
+                        android:textSize="10dp"
+                        android:textAlignment="center"
+                        android:textColor="@color/grey_icon"
+                        android:fontFamily="@font/pretendard_semi_bold"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_columnWeight="1"
+                    android:gravity="center">
+                    <ImageButton
+                        android:id="@+id/main_local_save_btn"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:src="@drawable/ic_local_save"
+                        android:scaleType="fitCenter"
+                        android:background="@color/transparent"/>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/save_local"
+                        android:textSize="10dp"
+                        android:textAlignment="center"
+                        android:textColor="@color/grey_icon"
+                        android:fontFamily="@font/pretendard_semi_bold"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_columnWeight="1"
+                    android:gravity="center">
+                    <ImageButton
+                        android:id="@+id/main_favorites_btn"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:src="@drawable/ic_favorites"
+                        android:scaleType="fitCenter"
+                        android:background="@color/transparent"/>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/favorites"
+                        android:textSize="10dp"
+                        android:textAlignment="center"
+                        android:textColor="@color/grey_icon"
+                        android:fontFamily="@font/pretendard_semi_bold"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_columnWeight="1"
+                    android:gravity="center">
+                    <ImageButton
+                        android:id="@+id/main_delete_btn"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:src="@drawable/ic_delete"
+                        android:scaleType="fitCenter"
+                        android:background="@color/transparent"/>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/delete"
+                        android:textSize="10dp"
+                        android:textAlignment="center"
+                        android:textColor="@color/grey_icon"
+                        android:fontFamily="@font/pretendard_semi_bold"/>
+                </LinearLayout>
+
+            </GridLayout>
 
             <ImageButton
                 android:id="@+id/main_add_scrap_btn"

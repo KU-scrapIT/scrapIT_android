@@ -10,4 +10,8 @@
     <string name="edit">편집</string>
     <string name="add_folder">폴더 추가</string>
     <string name="see_local_save">영구 저장 보기</string>
+    <string name="check_all">모두 선택</string>
+    <string name="move">이동</string>
+    <string name="copy">복사</string>
+    <string name="delete">삭제</string>
 </resources>

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="60dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/item_scrap_bg"
+    android:layout_margin="5dp"
+    android:elevation="2dp">
+
+    <ImageView
+        android:id="@+id/folder_favorites_iv"
+        android:layout_width="11dp"
+        android:layout_height="11dp"
+        android:src="@drawable/ic_star"
+        android:background="@color/transparent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_margin="6dp"/>
+    
+    <ImageView
+        android:id="@+id/folder_icon_tv"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:textColor="@color/white"
+        android:background="@drawable/ic_folder"
+        android:backgroundTint="@color/red_theme"
+        android:gravity="center"
+        android:layout_marginStart="13dp"
+        android:fontFamily="@font/pretendard_regular"
+        android:textSize="20dp"/>
+
+    <TextView
+        android:id="@+id/folder_title_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="지피티야 도와줘"
+        android:fontFamily="@font/pretendard_bold"
+        android:textColor="@color/black"
+        app:layout_constraintTop_toTopOf="@id/folder_icon_tv"
+        app:layout_constraintStart_toEndOf="@id/folder_icon_tv"
+        android:layout_marginStart="13dp"
+        android:textSize="15dp"/>
+
+    <TextView
+        android:id="@+id/folder_description_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="chatGPT"
+        android:textColor="@color/grey_word"
+        android:textSize="10dp"
+        app:layout_constraintBottom_toBottomOf="@id/folder_icon_tv"
+        app:layout_constraintStart_toEndOf="@id/folder_icon_tv"
+        android:layout_marginStart="13dp"/>
+    
+    <ImageView
+        android:id="@+id/folder_switcher"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginEnd="14dp"
+        android:layout_width="15dp"
+        android:layout_height="28dp"
+        android:src="@drawable/switcher"/>
+
+    <CheckBox
+        android:visibility="invisible"
+        android:id="@+id/folder_checkbox"
+        android:layout_width="22dp"
+        android:layout_height="22dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:background="@drawable/checkbox"
+        android:button="@color/transparent"
+        android:layout_marginEnd="10dp"
+        android:checked="true"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
