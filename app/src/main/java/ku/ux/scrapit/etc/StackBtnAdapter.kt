@@ -40,11 +40,6 @@ class StackBtnAdapter(private val folderNames: List<String>, private val folderC
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.folderTextView.text = folderNames[position]
 
-//        if (position == 0) {
-//            val shadowColor = android.graphics.Color.parseColor("#0000FF")
-//            holder.folderImageButton.setShadowLayer(10f, 0f, 0f, shadowColor)
-//        }
-
         holder.folderImageButton.setColorFilter(android.graphics.Color.parseColor(folderColors[position]))
 
         holder.folderImageButton.setOnClickListener {

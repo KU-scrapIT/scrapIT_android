@@ -130,7 +130,7 @@ class ScrapITApplication : Application() {
         folder3.folderId = 3
         folder3.nickname = "폴더 33"
         folder3.description = "폴더 3의 설명"
-        folder3.color = "#C1A5FF"
+        folder3.color = "#FFAAD7"
         folder3.isFavorites = false
 
         // 폴더 생성 및 속성 설정
