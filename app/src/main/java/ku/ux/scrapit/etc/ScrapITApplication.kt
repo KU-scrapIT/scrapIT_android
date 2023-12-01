@@ -29,9 +29,9 @@ class ScrapITApplication : Application() {
             return newFolderIdCounter
         }
 
-        fun generateNewIScrapId(context: Context): Int {
-            saveIdCounters(context)
+        fun generateNewIScrapId(context : Context): Int {
             newScrapIdCounter += 1
+            saveIdCounters(context)
             return newScrapIdCounter
         }
 
@@ -68,6 +68,9 @@ class ScrapITApplication : Application() {
             realm.copyToRealmOrUpdate(rootFolder)
             realm.commitTransaction()
         }
+
+        //testStackFragment()
+        //testDel()
     }
 
     private fun testFolderTree() {

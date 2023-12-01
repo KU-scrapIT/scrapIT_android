@@ -18,10 +18,19 @@ class FolderRVAdapter(list : RealmList<Folder>) : RecyclerView.Adapter<FolderRVA
     private var isAllChecked = false
     private val checkedItemList = HashSet<Int>()
 
+    interface OnClickListener {
+        fun onClick(folderId : Int)
+    }
+
+    private var onClickListener : OnClickListener? = null
+
+    fun setOnClickListener(listener : OnClickListener) {
+        onClickListener = listener
+    }
+
     inner class ViewHolder(private val binding : ItemFolderBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(pos : Int) {
             val folder = folderList[pos]
-            Log.d("isoo", "bind: ${folder?.nickname}")
 
             if(folder!!.isDeleted) binding.root.visibility = View.GONE
             else binding.root.visibility = View.VISIBLE
@@ -45,6 +54,10 @@ class FolderRVAdapter(list : RealmList<Folder>) : RecyclerView.Adapter<FolderRVA
             binding.folderCheckbox.setOnCheckedChangeListener { _, b ->
                 if(b) checkedItemList.add(folder.folderId)
                 else checkedItemList.remove(folder.folderId)
+            }
+
+            binding.root.setOnClickListener {
+                onClickListener?.onClick(folder.folderId)
             }
         }
     }

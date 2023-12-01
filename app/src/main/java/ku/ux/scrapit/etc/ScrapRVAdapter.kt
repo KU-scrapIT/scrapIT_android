@@ -19,10 +19,19 @@ class ScrapRVAdapter(list : RealmList<Scrap>) : RecyclerView.Adapter<ScrapRVAdap
     private var isAllChecked = false
     private val checkedItemList = HashSet<Int>()
 
+    interface OnClickListener {
+        fun onClick(pos : Int)
+    }
+
+    private var onClickListener : OnClickListener? = null
+
+    fun setOnClickListener(listener : OnClickListener) {
+        onClickListener = listener
+    }
+
     inner class ViewHolder(private val binding : ItemScrapBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(pos : Int) {
             val scrap = scrapList[pos]
-            Log.d("isoo", "bind: ${scrap?.nickname}")
 
             if(scrap!!.isDeleted) binding.root.visibility = View.GONE
             else binding.root.visibility = View.VISIBLE
@@ -52,6 +61,10 @@ class ScrapRVAdapter(list : RealmList<Scrap>) : RecyclerView.Adapter<ScrapRVAdap
                 if(b) checkedItemList.add(scrap.scrapId)
                 else checkedItemList.remove(scrap.scrapId)
             }
+
+            binding.root.setOnClickListener {
+                onClickListener?.onClick(pos)
+            }
         }
     }
 
@@ -63,7 +76,6 @@ class ScrapRVAdapter(list : RealmList<Scrap>) : RecyclerView.Adapter<ScrapRVAdap
     override fun getItemCount() : Int = scrapList.size
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        Log.d("isoo", "onBindViewHolder: $position")
         holder.bind(position)
     }
 
