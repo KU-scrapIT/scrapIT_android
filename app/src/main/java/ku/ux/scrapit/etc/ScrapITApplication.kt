@@ -19,10 +19,22 @@ class ScrapITApplication : Application() {
             val pref = context.getSharedPreferences("storage", Context.MODE_PRIVATE)
             pref.edit().putInt("currentFolderId", id)
         }
+        private var newFolderIdCounter = 0
+        private var newScrapIdCounter = 0
+
+        fun generateNewIFolderId(): Int {
+            newFolderIdCounter += 1
+            return newFolderIdCounter
+        }
+        fun generateNewIScrapId(): Int {
+            newScrapIdCounter += 1
+            return newScrapIdCounter
+        }
     }
 
     override fun onCreate() {
         super.onCreate()
+
 
         Realm.init(this)
         val config : RealmConfiguration = RealmConfiguration.Builder()

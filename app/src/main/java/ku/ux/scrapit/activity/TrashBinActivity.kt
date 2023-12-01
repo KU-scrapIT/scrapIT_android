@@ -48,6 +48,9 @@ class TrashBinActivity : AppCompatActivity() {
             trashbinadapter.deleteChecked()
 
         }
+        binding.trashbinRestoreBtn.setOnClickListener{
+
+        }
 
         binding.trashbinBackToMainBtn.setOnClickListener{
             finish()
