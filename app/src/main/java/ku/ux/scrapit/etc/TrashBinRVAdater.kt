@@ -2,6 +2,7 @@ package ku.ux.scrapit.etc
 
 import android.content.res.ColorStateList
 import android.graphics.Color
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -23,7 +24,8 @@ class TrashBinRVAdapter(private val scrapList: MutableList<Scrap>,
         private const val VIEW_TYPE_SCRAP = 2
     }
 
-    private val checkedItemList = HashSet<Int>()
+    private val checkedFolderList = HashSet<Int>()
+    private val checkedScrapList = HashSet<Int>()
     private var isAllChecked = false
 
     inner class FolderViewHolder(private val binding : ItemFolderBinding) : RecyclerView.ViewHolder(binding.root) {
@@ -47,8 +49,11 @@ class TrashBinRVAdapter(private val scrapList: MutableList<Scrap>,
 
             //체크 표시 여부
             binding.folderCheckbox.setOnCheckedChangeListener { _, b ->
-                if(b) checkedItemList.add(folder.folderId)
-                else checkedItemList.remove(folder.folderId)
+                if(b){
+                    checkedFolderList.add(folder.folderId)
+                    Log.d("tintin", "checkedFolderList : ${checkedFolderList.size}")
+                }
+                else checkedFolderList.remove(folder.folderId)
             }
         }
     }
@@ -80,8 +85,8 @@ class TrashBinRVAdapter(private val scrapList: MutableList<Scrap>,
 
             //체크 표시 여부
             binding.scrapCheckbox.setOnCheckedChangeListener { _, b ->
-                if(b) checkedItemList.add(scrap.scrapId)
-                else checkedItemList.remove(scrap.scrapId)
+                if(b) checkedScrapList.add(scrap.scrapId)
+                else checkedScrapList.remove(scrap.scrapId)
             }
         }
     }
@@ -89,15 +94,16 @@ class TrashBinRVAdapter(private val scrapList: MutableList<Scrap>,
     fun selectAll(){
 
         isAllChecked = true
-        checkedItemList.clear() // 기존에 선택된 아이템 초기화
+        checkedScrapList.clear() // 기존에 선택된 아이템 초기화
+        checkedFolderList.clear() // 기존에 선택된 아이템 초기화
 
         // 데이터를 반복하며 모든 아이템을 선택
         for (folder in folderList) {
-            checkedItemList.add(folder.folderId)
+            checkedFolderList.add(folder.folderId)
         }
 
         for (scrap in scrapList) {
-            checkedItemList.add(scrap.scrapId)
+            checkedScrapList.add(scrap.scrapId)
         }
 
         notifyDataSetChanged() // 어댑터에게 데이터 변경을 알림
@@ -107,26 +113,31 @@ class TrashBinRVAdapter(private val scrapList: MutableList<Scrap>,
     }
 
     fun deleteChecked() {   //  체크된거 삭제
-        var deleteThings = checkedItemList
+        val deleteFolder = checkedFolderList
         val realm = Realm.getDefaultInstance()
         realm.beginTransaction()
-        for(it in deleteThings){
+        for(it in deleteFolder){
             val folderToDelete = realm.where(Folder::class.java)
                 .equalTo("folderId", it) // 삭제할 조건 지정
                 .findFirst()
+            Log.d("tintin", "checkedFolderList : ${checkedFolderList.hashCode()}")
             folderList.remove(folderToDelete)
+            Log.d("tintin", "checkedFolderList : ${checkedFolderList.size}")
             folderToDelete?.deleteFromRealm() // 찾은 객체 삭제
         }
-        for(it in deleteThings){
-            val folderToDelete = realm.where(Scrap::class.java)
+        checkedFolderList.clear()
+
+        val deleteScrap = checkedScrapList
+        for(it in deleteScrap){
+            val scrapToDelete = realm.where(Scrap::class.java)
                 .equalTo("scrapId", it) // 삭제할 조건 지정
                 .findFirst()
-            scrapList.remove(folderToDelete)
-            folderToDelete?.deleteFromRealm() // 찾은 객체 삭제
+            scrapList.remove(scrapToDelete)
+            scrapToDelete?.deleteFromRealm() // 찾은 객체 삭제
         }
         realm.commitTransaction()
         realm.close()
-        checkedItemList.clear()
+        checkedScrapList.clear()
         notifyDataSetChanged()
     }
 
