@@ -13,6 +13,7 @@ class ScrapITApplication : Application() {
     companion object {
         lateinit var rootFolder: Folder
         var currentFolderId = -1
+        const val favoritesFolderId = -2
 
         @SuppressLint("CommitPrefEdits")
         fun setCurrentFolderId(context: Context, id: Int) {
@@ -68,7 +69,18 @@ class ScrapITApplication : Application() {
             realm.copyToRealmOrUpdate(rootFolder)
             realm.commitTransaction()
         }
-        testStackFragment()
+
+        val favoritesFolder = Folder()
+        favoritesFolder.folderId = favoritesFolderId
+        favoritesFolder.nickname = "즐겨찾기"
+        favoritesFolder.childFolderList.addAll(realm.where(Folder::class.java).equalTo("isFavorites", true).findAll())
+        favoritesFolder.scrapList.addAll(realm.where(Scrap::class.java).equalTo("isFavorites", true).findAll())
+        realm.beginTransaction()
+        realm.copyToRealmOrUpdate(favoritesFolder)
+        realm.commitTransaction()
+
+        //testStackFragment()
+        //testDel()
     }
 
     private fun testFolderTree() {

@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import io.realm.RealmList
 import ku.ux.scrapit.data.Folder
+import ku.ux.scrapit.data.Scrap
 import ku.ux.scrapit.databinding.ItemFolderBinding
 
 class FolderRVAdapter(list : RealmList<Folder>) : RecyclerView.Adapter<FolderRVAdapter.ViewHolder>() {
@@ -17,6 +18,16 @@ class FolderRVAdapter(list : RealmList<Folder>) : RecyclerView.Adapter<FolderRVA
     private var isEditMode = false
     private var isAllChecked = false
     private val checkedItemList = HashSet<Int>()
+
+    init {
+        val removeList = ArrayList<Folder>()
+        for(folder in folderList) {
+            if(folder.isDeleted) {
+                removeList.add(folder)
+            }
+        }
+        folderList.removeAll(removeList.toSet())
+    }
 
     interface OnClickListener {
         fun onClick(folderId : Int)
@@ -57,7 +68,7 @@ class FolderRVAdapter(list : RealmList<Folder>) : RecyclerView.Adapter<FolderRVA
             }
 
             binding.root.setOnClickListener {
-                onClickListener?.onClick(folder.folderId)
+                if(!isEditMode) onClickListener?.onClick(folder.folderId)
             }
         }
     }

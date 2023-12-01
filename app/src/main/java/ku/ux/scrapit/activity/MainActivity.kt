@@ -18,6 +18,7 @@ import ku.ux.scrapit.databinding.PopupKebabMenuBinding
 import ku.ux.scrapit.etc.FolderRVAdapter
 import ku.ux.scrapit.etc.FolderTreeRVAdapter
 import ku.ux.scrapit.etc.ScrapITApplication.Companion.currentFolderId
+import ku.ux.scrapit.etc.ScrapITApplication.Companion.favoritesFolderId
 import ku.ux.scrapit.etc.ScrapITApplication.Companion.rootFolder
 import ku.ux.scrapit.etc.ScrapRVAdapter
 
@@ -45,6 +46,11 @@ class MainActivity : AppCompatActivity() {
         }
         binding.drawerBackBtn.setOnClickListener {
             binding.mainDrawer.closeDrawer(GravityCompat.START)
+        }
+        binding.drawerFavoritesBtn.setOnClickListener {
+            val intent = Intent(this@MainActivity, MainActivity::class.java)
+            currentFolderId = favoritesFolderId
+            startActivity(intent)
         }
         binding.drawerTrashBinBtn.setOnClickListener {
             val intent = Intent(this, TrashBinActivity::class.java)
@@ -223,16 +229,25 @@ class MainActivity : AppCompatActivity() {
 
     private fun addFavorites(scrapList : List<Int>, folderList : List<Int>) {
         val realm = Realm.getDefaultInstance()
+        val favoriteFolder = realm.where(Folder::class.java).equalTo("folderId", favoritesFolderId).findFirst()
         for(scrapId in scrapList) {
             val result = realm.where(Scrap::class.java).equalTo("scrapId", scrapId).findFirst()
             realm.beginTransaction()
             result?.isFavorites = !result?.isFavorites!!
+            if(result.isFavorites)
+                favoriteFolder?.scrapList?.add(result)
+            else
+                favoriteFolder?.scrapList?.remove(result)
             realm.commitTransaction()
         }
         for(folderId in folderList) {
             val result = realm.where(Folder::class.java).equalTo("folderId", folderId).findFirst()
             realm.beginTransaction()
             result?.isFavorites = !result?.isFavorites!!
+            if(result.isFavorites)
+                favoriteFolder?.childFolderList?.add(result)
+            else
+                favoriteFolder?.childFolderList?.remove(result)
             realm.commitTransaction()
         }
         realm.close()
