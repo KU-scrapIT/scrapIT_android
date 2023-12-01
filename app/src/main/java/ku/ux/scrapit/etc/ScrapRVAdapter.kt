@@ -19,6 +19,16 @@ class ScrapRVAdapter(list : RealmList<Scrap>) : RecyclerView.Adapter<ScrapRVAdap
     private var isAllChecked = false
     private val checkedItemList = HashSet<Int>()
 
+    init {
+        val removeList = ArrayList<Scrap>()
+        for(scrap in scrapList) {
+            if(scrap.isDeleted) {
+                removeList.add(scrap)
+            }
+        }
+        scrapList.removeAll(removeList.toSet())
+    }
+
     interface OnClickListener {
         fun onClick(pos : Int)
     }
@@ -63,7 +73,7 @@ class ScrapRVAdapter(list : RealmList<Scrap>) : RecyclerView.Adapter<ScrapRVAdap
             }
 
             binding.root.setOnClickListener {
-                onClickListener?.onClick(pos)
+                if(!isEditMode) onClickListener?.onClick(pos)
             }
         }
     }
