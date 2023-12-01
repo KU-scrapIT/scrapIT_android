@@ -239,11 +239,6 @@ class AddNewItemActivity : AppCompatActivity(){
         setColor(IndexColor.RED.colorCode)
         binding.urlET.setText(isUrl)
         scrap.scrapId = generateNewIScrapId(this)
-//        scrap.parentFolder = parentFolder
-//        realm.beginTransaction()
-//        parentFolder?.scrapList?.add(scrap)
-//        realm.commitTransaction()
-//        realm.close()
     }
 
     private fun initNewScrap(parentFolder : Int) {
@@ -288,6 +283,7 @@ class AddNewItemActivity : AppCompatActivity(){
             binding.nicknameET.setText(exScrap.nickname)
             binding.explainET.setText(exScrap.description)
             binding.urlET.setText(exScrap.url)
+            checkedColor = exScrap.color
             setColor(exScrap.color)
         }
 //        realm.close()
@@ -307,6 +303,7 @@ class AddNewItemActivity : AppCompatActivity(){
             //각 필드에 해당 값 올려두기
             binding.nicknameET.setText(existingFolder.nickname)
             binding.explainET.setText(existingFolder.description)
+            checkedColor = existingFolder.color
             setColor(existingFolder.color)
         }
         hideUrl()
