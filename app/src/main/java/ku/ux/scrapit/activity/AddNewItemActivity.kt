@@ -31,15 +31,11 @@ import ku.ux.scrapit.data.IndexColor
 
 class AddNewItemActivity : AppCompatActivity(){
 
-
     private var folder = Folder()
     private var scrap = Scrap()
     private lateinit var checkedColor : String
-
     private lateinit var realm: Realm
-
     private lateinit var binding : ActivityAddnewitemBinding
-
     // 이미지 선택 창
     private lateinit var imageviews: List<ImageView>
 
@@ -158,28 +154,23 @@ class AddNewItemActivity : AppCompatActivity(){
     }
 
     private fun setColor(givenColor: String) {
-        //기본적으로 새로 만들때에는 default로 RED 설정하는데 편집 시에는 변수를 입력하여야 함.
-//        Toast.makeText(this, "현재 색상: $givenColor", Toast.LENGTH_SHORT).show()
+        for (imageView in imageviews) {
+            val backgroundTintList = imageView.backgroundTintList?.defaultColor
 
-        val parsedColor = Color.parseColor(givenColor)
-//        for (imageView in imageviews) {
-//            // 들어온 값에 체크 표시
-//            val colorDrawable = imageView.backgroundTintList
-//
-//            if (colorDrawable is ColorDrawable) {
-//                val colorParsedToInt = colorDrawable.color
-//
-//                if (colorParsedToInt == parsedColor) {
-//                    imageView.setImageResource(R.drawable.check)
-//                } else {
-//                    // 배경색이 일치하지 않으면 이미지 초기화
-//                    imageView.setImageDrawable(null)
-//                }
-//            } else {
-//                // 배경이 ColorDrawable이 아닌 경우에도 이미지 초기화
-//                imageView.setImageDrawable(null)
-//            }
-//        }
+            // backgroundTintList가 null이 아닌지 확인
+            backgroundTintList?.let {
+                // 이미지뷰의 배경색을 16진수 문자열로 변환
+                val imageViewColorString = "#" + Integer.toHexString(backgroundTintList).substring(2).toUpperCase()
+//                Log.d("tintin", "imageViewColorString: $imageViewColorString")
+                Log.d("tintin", "givenColor: $givenColor")
+                // 주어진 색상과 이미지뷰의 배경색을 비교
+                if (imageViewColorString == (givenColor)) {
+//                    Log.d("tintin", "setColor: $imageViewColorString")
+                    // 배경색이 주어진 색상과 일치하는 경우
+                    selectThemeColor(imageView)
+                }
+            }
+        }
     }
 
     private fun setInitByIntent() {
@@ -290,6 +281,10 @@ class AddNewItemActivity : AppCompatActivity(){
             setColor(existingFolder.color)
         }
         hideUrl()
+    }
+    private fun selectThemeColor(imageView: View) {
+        // Set the check mark
+       (imageView as ImageView).setImageResource(R.drawable.check)
     }
     override fun onDestroy() {
         super.onDestroy()
