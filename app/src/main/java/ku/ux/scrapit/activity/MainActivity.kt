@@ -155,16 +155,22 @@ class MainActivity : AppCompatActivity() {
             val scrapList = (binding.mainScrapRecyclerView.adapter as ScrapRVAdapter).getCheckedScraps()
             val folderList = (binding.mainFolderRecyclerView.adapter as FolderRVAdapter).getCheckedFolders()
             move(scrapList, folderList)
+            (binding.mainScrapRecyclerView.adapter as ScrapRVAdapter).notifyDataSetChanged()
+            (binding.mainFolderRecyclerView.adapter as FolderRVAdapter).notifyDataSetChanged()
         }
         binding.mainEditBtn.setOnClickListener {
             val scrapList = (binding.mainScrapRecyclerView.adapter as ScrapRVAdapter).getCheckedScraps()
             val folderList = (binding.mainFolderRecyclerView.adapter as FolderRVAdapter).getCheckedFolders()
             edit(scrapList, folderList)
+            (binding.mainScrapRecyclerView.adapter as ScrapRVAdapter).notifyDataSetChanged()
+            (binding.mainFolderRecyclerView.adapter as FolderRVAdapter).notifyDataSetChanged()
         }
         binding.mainFavoritesBtn.setOnClickListener {
             val scrapList = (binding.mainScrapRecyclerView.adapter as ScrapRVAdapter).getCheckedScraps()
             val folderList = (binding.mainFolderRecyclerView.adapter as FolderRVAdapter).getCheckedFolders()
             addFavorites(scrapList, folderList)
+            (binding.mainScrapRecyclerView.adapter as ScrapRVAdapter).notifyDataSetChanged()
+            (binding.mainFolderRecyclerView.adapter as FolderRVAdapter).notifyDataSetChanged()
         }
         binding.mainDeleteBtn.setOnClickListener {
             val scrapList = (binding.mainScrapRecyclerView.adapter as ScrapRVAdapter).getCheckedScraps()
@@ -180,11 +186,39 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun edit(scrapList : List<Int>, folderList : List<Int>) {
-
+        if(scrapList.size + folderList.size > 1) return
+        if(scrapList.isNotEmpty()) {
+            val intent = Intent(this, AddNewItemActivity::class.java)
+            intent.putExtra("scrap", scrapList[0])
+            intent.putExtra("parentFolder", currentFolderId)
+            intent.putExtra("folder", 0)
+            intent.putExtra("url", "")
+            startActivityForResult(intent, 100)
+        } else if(folderList.isNotEmpty()) {
+            val intent = Intent(this, AddNewItemActivity::class.java)
+            intent.putExtra("scrap", 0)
+            intent.putExtra("parentFolder", currentFolderId)
+            intent.putExtra("folder", folderList[0])
+            intent.putExtra("url", "")
+            startActivityForResult(intent, 100)
+        }
     }
 
     private fun addFavorites(scrapList : List<Int>, folderList : List<Int>) {
-
+        val realm = Realm.getDefaultInstance()
+        for(scrapId in scrapList) {
+            val result = realm.where(Scrap::class.java).equalTo("scrapId", scrapId).findFirst()
+            realm.beginTransaction()
+            result?.isFavorites = !result?.isFavorites!!
+            realm.commitTransaction()
+        }
+        for(folderId in folderList) {
+            val result = realm.where(Folder::class.java).equalTo("folderId", folderId).findFirst()
+            realm.beginTransaction()
+            result?.isFavorites = !result?.isFavorites!!
+            realm.commitTransaction()
+        }
+        realm.close()
     }
 
     private fun delete(scrapList : List<Int>, folderList : List<Int>) {

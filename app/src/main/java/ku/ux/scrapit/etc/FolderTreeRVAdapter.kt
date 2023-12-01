@@ -4,6 +4,7 @@ import android.content.res.ColorStateList
 import android.graphics.Color
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -31,6 +32,9 @@ class FolderTreeRVAdapter(rootFolder : Folder) : RecyclerView.Adapter<FolderTree
     inner class ViewHolder(private val binding : ItemFolderTreeBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(pos : Int) {
             val folderItem = folderItemList[pos]
+            if(folderItem.folder.isDeleted) binding.root.visibility = View.GONE
+            else binding.root.visibility = View.VISIBLE
+
             binding.itemFolderTreeBtn.iconTint = ColorStateList.valueOf(Color.parseColor(folderItem.folder.color))
             binding.itemFolderTreeBtn.text = folderItem.folder.nickname
 
