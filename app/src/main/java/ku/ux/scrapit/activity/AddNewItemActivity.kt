@@ -26,7 +26,8 @@ import io.realm.RealmConfiguration
 import io.realm.kotlin.where
 import ku.ux.scrapit.data.Folder
 import ku.ux.scrapit.data.IndexColor
-
+import ku.ux.scrapit.etc.ScrapITApplication.Companion.generateNewIFolderId
+import ku.ux.scrapit.etc.ScrapITApplication.Companion.generateNewIScrapId
 
 
 class AddNewItemActivity : AppCompatActivity(){
@@ -36,8 +37,10 @@ class AddNewItemActivity : AppCompatActivity(){
     private lateinit var checkedColor : String
     private lateinit var realm: Realm
     private lateinit var binding : ActivityAddnewitemBinding
+    private lateinit var parentFolder: Folder
     // 이미지 선택 창
     private lateinit var imageviews: List<ImageView>
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -61,8 +64,16 @@ class AddNewItemActivity : AppCompatActivity(){
             val folderId = intent.getIntExtra("folder", 0)
             val scrapId = intent.getIntExtra("scrap", 0)
 
-            if(folderId != 0) saveFolder()
-            else if (scrapId !=0 ) saveScrap()
+            if(folderId < 0){
+                saveNewFolder()
+            }else if(folderId > 0){
+                saveExistFolder()
+            }else if (scrapId  < 0 ){
+                saveNewScrap()
+            }else if(scrapId > 0){
+                saveExistScrap()
+            }
+
             setResult(Activity.RESULT_OK, null) // 결과 코드와 결과 Intent 설정
             finish()
         }
@@ -71,21 +82,50 @@ class AddNewItemActivity : AppCompatActivity(){
         }
     }
 
-    private fun saveScrap() {
+    private fun saveNewScrap() {
+        parentFolder =
+            realm.where(Folder::class.java).equalTo("folderId", intent.getIntExtra("parentFolder",0)).findFirst()!!
         scrap.description = binding.explainET.text.toString()
         scrap.nickname = binding.nicknameET.text.toString()
         scrap.color = checkedColor
         scrap.url = binding.urlET.text.toString()
-
+        scrap.parentFolder = parentFolder
+        realm.beginTransaction() //고정
+        parentFolder.scrapList.add(scrap)
+        realm.copyToRealmOrUpdate(scrap)
+        realm.commitTransaction()
+    }
+    private fun saveExistScrap() {
+        parentFolder =
+            realm.where(Folder::class.java).equalTo("folderId", intent.getIntExtra("parentFolder",0)).findFirst()!!
+        scrap.description = binding.explainET.text.toString()
+        scrap.nickname = binding.nicknameET.text.toString()
+        scrap.color = checkedColor
+        scrap.url = binding.urlET.text.toString()
+        scrap.parentFolder = parentFolder
         realm.beginTransaction() //고정
         realm.copyToRealmOrUpdate(scrap)
         realm.commitTransaction()
     }
-    private fun saveFolder() {
+    private fun saveNewFolder() {
+        parentFolder =
+            realm.where(Folder::class.java).equalTo("folderId", intent.getIntExtra("parentFolder",0)).findFirst()!!
         folder.description = binding.explainET.text.toString()
         folder.nickname = binding.nicknameET.text.toString()
         folder.color = checkedColor
-
+        folder.parentFolder = parentFolder
+        realm.beginTransaction() //고정
+        parentFolder.childFolderList.add(folder)
+        realm.copyToRealmOrUpdate(folder)
+        realm.commitTransaction()
+    }
+    private fun saveExistFolder() {
+        parentFolder =
+            realm.where(Folder::class.java).equalTo("folderId", intent.getIntExtra("parentFolder",0)).findFirst()!!
+        folder.description = binding.explainET.text.toString()
+        folder.nickname = binding.nicknameET.text.toString()
+        folder.color = checkedColor
+        folder.parentFolder = parentFolder
         realm.beginTransaction() //고정
         realm.copyToRealmOrUpdate(folder)
         realm.commitTransaction()
@@ -195,46 +235,35 @@ class AddNewItemActivity : AppCompatActivity(){
     }
 
     private fun initNewScrapWithUrl(isUrl: String, parentFolder : Int) {
-//        val realm = Realm.getDefaultInstance()
-        val parentFolder: Folder? = realm.where(Folder::class.java).equalTo("folderId", parentFolder).findFirst()
-
         binding.titleTV.text = "새 스크랩"
         setColor(IndexColor.RED.colorCode)
         binding.urlET.setText(isUrl)
-        scrap.scrapId = 100 //  임시
-        scrap.parentFolder = parentFolder
-        realm.beginTransaction()
-        parentFolder?.scrapList?.add(scrap)
-        realm.commitTransaction()
+        scrap.scrapId = generateNewIScrapId(this)
+//        scrap.parentFolder = parentFolder
+//        realm.beginTransaction()
+//        parentFolder?.scrapList?.add(scrap)
+//        realm.commitTransaction()
 //        realm.close()
     }
 
     private fun initNewScrap(parentFolder : Int) {
 
 //        val realm = Realm.getDefaultInstance()
-        val parentFolder: Folder? = realm.where(Folder::class.java).equalTo("folderId", parentFolder).findFirst()
+//        val parentFolder: Folder? = realm.where(Folder::class.java).equalTo("folderId", parentFolder).findFirst()
         binding.titleTV.text = "새 스크랩"
         setColor(IndexColor.RED.colorCode)
-        scrap.scrapId = 100 //  임시
-        scrap.parentFolder = parentFolder
-        realm.beginTransaction()
-        parentFolder?.scrapList?.add(scrap)
-        realm.commitTransaction()
+        scrap.scrapId = generateNewIScrapId(this)
+//        scrap.parentFolder =
 //        realm.close()
     }
     private fun initNewFolder(parentFolderId : Int) {
 //        val realm = Realm.getDefaultInstance()
-        val parentFolder: Folder? = realm.where(Folder::class.java).equalTo("folderId", parentFolderId).findFirst()
-
+//        val parentFolder: Folder? = realm.where(Folder::class.java).equalTo("folderId", parentFolderId).findFirst()
         binding.titleTV.text = "새 폴더"
         setColor(IndexColor.RED.colorCode)
-        folder.folderId = 100
-        folder.parentFolder = parentFolder
-        realm.beginTransaction()
-        parentFolder?.childFolderList?.add(folder)
-        realm.commitTransaction()
+        folder.folderId = generateNewIFolderId(this)
+//        folder.parentFolder = parentFolder
         hideUrl()
-//        realm.close()
     }
     private fun hideUrl(){
         binding.urlET.visibility = View.GONE
@@ -251,9 +280,9 @@ class AddNewItemActivity : AppCompatActivity(){
             scrap.isFavorites = exScrap.isFavorites
             scrap.isDeleted = exScrap.isDeleted
             scrap.parentFolder = exScrap.parentFolder
-            realm.beginTransaction()
-            exScrap.parentFolder?.scrapList?.add(scrap)
-            realm.commitTransaction()
+//            realm.beginTransaction()
+//            exScrap.parentFolder?.scrapList?.add(scrap)
+//            realm.commitTransaction()
             scrap.localPath = exScrap.localPath
             //각 필드에 해당 값 올려두기
             binding.nicknameET.setText(exScrap.nickname)
