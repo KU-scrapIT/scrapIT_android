@@ -1,10 +1,15 @@
 package ku.ux.scrapit.activity
 
 import android.annotation.SuppressLint
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
+import android.util.DisplayMetrics
 import android.util.Log
 import android.view.MotionEvent
 import android.view.View
+import android.view.WindowManager
+import android.webkit.WebView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -12,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import io.realm.Realm
+import ku.ux.scrapit.R
 import ku.ux.scrapit.custom_view.WebFragment
 import ku.ux.scrapit.data.Folder
 import ku.ux.scrapit.databinding.ActivityStackBinding
@@ -40,6 +46,7 @@ class StackActivity : AppCompatActivity() {
 
     private var recentFolderId: Int? = null
     private var recentPosition: Int? = null
+    private var currentFolderId: Int? = null
 
     private var time = 0L
 
@@ -58,10 +65,14 @@ class StackActivity : AppCompatActivity() {
 //        나중에 수정해주기!!!
         recentFolderId = 3
         recentPosition = 1
-
+        currentFolderId = recentFolderId
 
         // 폴더 이름 데이터 생성
 //        val folderNames = listOf("폴더 1", "폴더 2", "폴더 3", "폴더 4")
+
+        // 웹뷰 세팅
+        setViewPager(urlList, 0)
+
 
         // 리사이클러뷰에 어댑터 설정
         binding.stackRecyclerView.adapter = StackBtnAdapter(folderNames, folderColors)
@@ -69,32 +80,9 @@ class StackActivity : AppCompatActivity() {
         // 레이아웃 매니저 설정
         binding.stackRecyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
 
-        // 웹뷰 세팅
-        setViewPager(urlList, 0)
-
-//        // URL 리스트로 WebFragment를 생성하여 ViewPager에 설정
-//        val pagerAdapter = object : FragmentStateAdapter(this) {
-//            override fun getItemCount() = urlList.size
-//
-//            override fun createFragment(position: Int): Fragment {
-//                return WebFragment(urlList[position])
-//            }
-//        }
-//        // 마지막url -> 첫url 이동
-//        binding.stackViewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
-//            override fun onPageSelected(position: Int) {
-//                if(position == pagerAdapter.itemCount - 1) {
-//                    binding.stackViewPager.post {
-//                        //binding.stackViewPager.setCurrentItem(0, false)
-//                    }
-//                }
-//            }
-//        })
-//        binding.stackViewPager.adapter = pagerAdapter
 
         // 플로팅 버튼 이벤트 처리
         binding.stackFabBtn.setOnTouchListener { _, event ->
-            Log.d("isoo", "onCreate: ${event}")
             when (event.action) {
                 MotionEvent.ACTION_DOWN -> {
                     // 터치가 시작된 경우, 터치 지점과 버튼의 현재 위치를 저장
@@ -104,7 +92,6 @@ class StackActivity : AppCompatActivity() {
                     time = System.currentTimeMillis()
                 }
                 MotionEvent.ACTION_MOVE -> {
-                    Log.d("isoo", "onCreate: move!!")
                     if(!isOpen){
                         // 터치가 이동 중인 경우, 버튼을 이동시킴
                         binding.stackFabBtn.x = event.rawX - startX
@@ -115,7 +102,6 @@ class StackActivity : AppCompatActivity() {
                 }
                 MotionEvent.ACTION_UP -> {
                     // 클릭 이벤트 처리
-                    Log.d("isoo", "onCreate: up!! $isMoving")
                     if(System.currentTimeMillis() - time < 100) {
                         if(!isOpen) {
                             originalX = binding.stackFabBtn.x
@@ -129,14 +115,51 @@ class StackActivity : AppCompatActivity() {
             true // 터치 이벤트 소비
         }
 
+        // 최근 폴더 버튼 이벤트 처리
         binding.stackFabRecentBtn.setOnClickListener {
+            val recentUrls = getUrls(recentFolderId!!)
+            setViewPager(recentUrls, recentPosition!!)
+            currentFolderId = recentFolderId
+        }
 
+        // 스크랩 추가 버튼 이벤트 처리
+        binding.stackFabAddBtn.setOnClickListener {
+            val currentUrl = findViewById<WebView>(R.id.web_view).url
+            Log.d("cyl", "Current URL: $currentUrl")
+
+            val intent = Intent(this, AddNewItemActivity::class.java)
+            intent.putExtra("scrap", -1)
+            intent.putExtra("parentFolder", currentFolderId)
+            intent.putExtra("folder", 0)
+            intent.putExtra("url", currentUrl)
+            startActivityForResult(intent, 100)
+        }
+
+        // 나가기 버튼 이벤트 처리
+        binding.stackFabOutBtn.setOnClickListener {
+            finish()
         }
 
         // 웹뷰 업데이트
         updateViewPagerContent()
 
 
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    @Deprecated("Deprecated in Java")
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if(resultCode == RESULT_OK) {
+            // 새로 업데이트된 realm을 반영해서 페이저 새로 구성
+            folderIds = getFavoriteFolders()
+            folderNames = getFolderNames()
+            folderColors = getFolderColors()
+
+            val currentFolderUrls = getUrls(currentFolderId ?: -1)
+
+            setViewPager(currentFolderUrls, 0)
+        }
     }
 
     private fun updateConnectedViewPosition() {
@@ -160,7 +183,6 @@ class StackActivity : AppCompatActivity() {
             targetX = 20f
         } else { // 닫힘 상태 정의
             binding.stackScrollView.visibility = View.GONE
-            // TODO: 즐겨찾기 등록 폴더 웹뷰로 이동하는 코드 추가
         }
 
         binding.stackFabBtn.animate()
@@ -174,6 +196,13 @@ class StackActivity : AppCompatActivity() {
                 }
             }
             .start()
+    }
+
+    fun getScreenWidth(context: Context): Int {
+        val windowManager = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+        val displayMetrics = DisplayMetrics()
+        windowManager.defaultDisplay.getMetrics(displayMetrics)
+        return displayMetrics.widthPixels
     }
 
     private fun getFavoriteFolders(): List<Int> {
@@ -247,18 +276,19 @@ class StackActivity : AppCompatActivity() {
                 return WebFragment(urls[position])
             }
         }
+        binding.stackViewPager.adapter = pagerAdapter
+
         // 마지막url -> 첫url 이동
         binding.stackViewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
+                super.onPageSelected(position)
                 if(position == pagerAdapter.itemCount - 1) {
                     binding.stackViewPager.post {
-                        // binding.stackViewPager.setCurrentItem(0, false)
+//                         binding.stackViewPager.setCurrentItem(0, false)
                     }
                 }
             }
         })
-
-        binding.stackViewPager.adapter = pagerAdapter
 
         // 원하는 페이지(첫 페이지)로 이동
         binding.stackViewPager.post {
@@ -272,33 +302,9 @@ class StackActivity : AppCompatActivity() {
                 val targetFolderId = folderIds[pos]
                 val targetFolderUrls = getUrls(targetFolderId)
 
+                currentFolderId = targetFolderId
+                // 웹뷰 세팅
                 setViewPager(targetFolderUrls, 0)
-
-//                // 가져온 URL 리스트로 WebFragment를 생성하여 ViewPager에 설정
-//                val pagerAdapter = object : FragmentStateAdapter(this@StackActivity) {
-//                    override fun getItemCount() = targetFolderUrls.size
-//
-//                    override fun createFragment(position: Int): Fragment {
-//                        return WebFragment(targetFolderUrls[position])
-//                    }
-//                }
-//                // 마지막url -> 첫url 이동
-//                binding.stackViewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
-//                    override fun onPageSelected(position: Int) {
-//                        if(position == pagerAdapter.itemCount - 1) {
-//                            binding.stackViewPager.post {
-//                                //binding.stackViewPager.setCurrentItem(0, false)
-//                            }
-//                        }
-//                    }
-//                })
-//
-//                binding.stackViewPager.adapter = pagerAdapter
-//
-//                // 원하는 페이지(첫 페이지)로 이동
-//                binding.stackViewPager.post {
-//                    binding.stackViewPager.setCurrentItem(0, false)
-//                }
             }
         })
     }
