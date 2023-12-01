@@ -133,6 +133,14 @@ class ScrapITApplication : Application() {
         folder3.color = "#C1A5FF"
         folder3.isFavorites = false
 
+        // 폴더 생성 및 속성 설정
+        val folder4 = Folder()
+        folder4.folderId = 4
+        folder4.nickname = "폴더 44"
+        folder4.description = "폴더 4의 설명"
+        folder4.color = "#C1A5FF"
+        folder4.isFavorites = false
+
         // 폴더에 속한 스크랩 생성 및 속성 설정
         val scrap5 = Scrap()
         scrap5.scrapId = 5
@@ -157,6 +165,12 @@ class ScrapITApplication : Application() {
         folder2.scrapList.add(scrap4)
         folder3.scrapList.add(scrap5)
         folder3.scrapList.add(scrap6)
+        folder3.childFolderList.add(folder4)
+        folder4.parentFolder = folder3
+
+        folder.parentFolder = rootFolder
+        folder2.parentFolder = rootFolder
+        folder3.parentFolder = rootFolder
 
         realm.beginTransaction()
         rootFolder.childFolderList.add(folder)
@@ -169,6 +183,8 @@ class ScrapITApplication : Application() {
             // 폴더와 하위 스크랩들을 Realm에 추가
             it.copyToRealmOrUpdate(folder)
             it.copyToRealmOrUpdate(folder2)
+            it.copyToRealmOrUpdate(folder3)
+            it.copyToRealmOrUpdate(folder4)
         }
 
         // Realm 사용 종료

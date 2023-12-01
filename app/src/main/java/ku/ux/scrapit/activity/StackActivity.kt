@@ -41,6 +41,7 @@ class StackActivity : AppCompatActivity() {
     private var recentFolderId: Int? = null
     private var recentPosition: Int? = null
 
+    private var time = 0L
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -93,14 +94,17 @@ class StackActivity : AppCompatActivity() {
 
         // 플로팅 버튼 이벤트 처리
         binding.stackFabBtn.setOnTouchListener { _, event ->
+            Log.d("isoo", "onCreate: ${event}")
             when (event.action) {
                 MotionEvent.ACTION_DOWN -> {
                     // 터치가 시작된 경우, 터치 지점과 버튼의 현재 위치를 저장
                     startX = event.rawX - binding.stackFabBtn.x
                     startY = event.rawY - binding.stackFabBtn.y
                     isMoving = false
+                    time = System.currentTimeMillis()
                 }
                 MotionEvent.ACTION_MOVE -> {
+                    Log.d("isoo", "onCreate: move!!")
                     if(!isOpen){
                         // 터치가 이동 중인 경우, 버튼을 이동시킴
                         binding.stackFabBtn.x = event.rawX - startX
@@ -111,7 +115,8 @@ class StackActivity : AppCompatActivity() {
                 }
                 MotionEvent.ACTION_UP -> {
                     // 클릭 이벤트 처리
-                    if(!isMoving) {
+                    Log.d("isoo", "onCreate: up!! $isMoving")
+                    if(System.currentTimeMillis() - time < 100) {
                         if(!isOpen) {
                             originalX = binding.stackFabBtn.x
                             originalY = binding.stackFabBtn.y
