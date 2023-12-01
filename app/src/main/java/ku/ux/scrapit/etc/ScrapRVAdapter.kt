@@ -79,6 +79,12 @@ class ScrapRVAdapter(list : RealmList<Scrap>) : RecyclerView.Adapter<ScrapRVAdap
 
     fun isCheckAllItem(isCheck : Boolean) {
         isAllChecked = isCheck
+        checkedItemList.clear()
+        if(isAllChecked) {
+            for(scrap in scrapList) {
+                checkedItemList.add(scrap.scrapId)
+            }
+        }
         notifyDataSetChanged()
     }
 

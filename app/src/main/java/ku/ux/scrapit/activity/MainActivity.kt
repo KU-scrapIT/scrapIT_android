@@ -48,6 +48,10 @@ class MainActivity : AppCompatActivity() {
         binding.drawerBackBtn.setOnClickListener {
             binding.mainDrawer.closeDrawer(GravityCompat.START)
         }
+        binding.drawerTrashBinBtn.setOnClickListener {
+            val intent = Intent(this, TrashBinActivity::class.java)
+            startActivity(intent)
+        }
         binding.mainAddScrapBtn.setOnClickListener {
             val intent = Intent(this, AddNewItemActivity::class.java)
             intent.putExtra("scrap", -1)
@@ -56,6 +60,8 @@ class MainActivity : AppCompatActivity() {
             intent.putExtra("url", "")
             startActivityForResult(intent, 100)
         }
+
+        initEditModeBar()
 
         binding.mainScrapRecyclerView.layoutManager = LinearLayoutManager(this)
         binding.mainScrapRecyclerView.adapter = ScrapRVAdapter(currentFolder.scrapList)
@@ -108,7 +114,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        super.onBackPressed()
+        //super.onBackPressed()
         endEditMode()
     }
 
@@ -142,6 +148,60 @@ class MainActivity : AppCompatActivity() {
         binding.mainAddScrapBtn.visibility = View.VISIBLE
         (binding.mainScrapRecyclerView.adapter as ScrapRVAdapter).turnOffEditMode()
         (binding.mainFolderRecyclerView.adapter as FolderRVAdapter).turnOffEditMode()
+    }
+
+    private fun initEditModeBar() {
+        binding.mainMoveBtn.setOnClickListener {
+            val scrapList = (binding.mainScrapRecyclerView.adapter as ScrapRVAdapter).getCheckedScraps()
+            val folderList = (binding.mainFolderRecyclerView.adapter as FolderRVAdapter).getCheckedFolders()
+            move(scrapList, folderList)
+        }
+        binding.mainEditBtn.setOnClickListener {
+            val scrapList = (binding.mainScrapRecyclerView.adapter as ScrapRVAdapter).getCheckedScraps()
+            val folderList = (binding.mainFolderRecyclerView.adapter as FolderRVAdapter).getCheckedFolders()
+            edit(scrapList, folderList)
+        }
+        binding.mainFavoritesBtn.setOnClickListener {
+            val scrapList = (binding.mainScrapRecyclerView.adapter as ScrapRVAdapter).getCheckedScraps()
+            val folderList = (binding.mainFolderRecyclerView.adapter as FolderRVAdapter).getCheckedFolders()
+            addFavorites(scrapList, folderList)
+        }
+        binding.mainDeleteBtn.setOnClickListener {
+            val scrapList = (binding.mainScrapRecyclerView.adapter as ScrapRVAdapter).getCheckedScraps()
+            val folderList = (binding.mainFolderRecyclerView.adapter as FolderRVAdapter).getCheckedFolders()
+            delete(scrapList, folderList)
+            (binding.mainScrapRecyclerView.adapter as ScrapRVAdapter).notifyDataSetChanged()
+            (binding.mainFolderRecyclerView.adapter as FolderRVAdapter).notifyDataSetChanged()
+        }
+    }
+
+    private fun move(scrapList : List<Int>, folderList : List<Int>) {
+
+    }
+
+    private fun edit(scrapList : List<Int>, folderList : List<Int>) {
+
+    }
+
+    private fun addFavorites(scrapList : List<Int>, folderList : List<Int>) {
+
+    }
+
+    private fun delete(scrapList : List<Int>, folderList : List<Int>) {
+        val realm = Realm.getDefaultInstance()
+        for(scrapId in scrapList) {
+            val result = realm.where(Scrap::class.java).equalTo("scrapId", scrapId).findFirst()
+            realm.beginTransaction()
+            result?.isDeleted = true
+            realm.commitTransaction()
+        }
+        for(folderId in folderList) {
+            val result = realm.where(Folder::class.java).equalTo("folderId", folderId).findFirst()
+            realm.beginTransaction()
+            result?.isDeleted = true
+            realm.commitTransaction()
+        }
+        realm.close()
     }
 
 }

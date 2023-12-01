@@ -114,16 +114,20 @@ class TrashBinRVAdapter(private val scrapList: MutableList<Scrap>,
             val folderToDelete = realm.where(Folder::class.java)
                 .equalTo("folderId", it) // 삭제할 조건 지정
                 .findFirst()
+            folderList.remove(folderToDelete)
             folderToDelete?.deleteFromRealm() // 찾은 객체 삭제
-            checkedItemList.remove(it)
         }
         for(it in deleteThings){
             val folderToDelete = realm.where(Scrap::class.java)
-                .equalTo("ScrapId", it) // 삭제할 조건 지정
+                .equalTo("scrapId", it) // 삭제할 조건 지정
                 .findFirst()
+            scrapList.remove(folderToDelete)
             folderToDelete?.deleteFromRealm() // 찾은 객체 삭제
         }
+        realm.commitTransaction()
         realm.close()
+        checkedItemList.clear()
+        notifyDataSetChanged()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {

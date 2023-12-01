@@ -72,10 +72,16 @@ class FolderRVAdapter(list : RealmList<Folder>) : RecyclerView.Adapter<FolderRVA
 
     fun isCheckAllItem(isCheck : Boolean) {
         isAllChecked = isCheck
+        checkedItemList.clear()
+        if(isAllChecked) {
+            for(folder in folderList) {
+                checkedItemList.add(folder.folderId)
+            }
+        }
         notifyDataSetChanged()
     }
 
-    fun getCheckedScraps() : List<Int> {
+    fun getCheckedFolders() : List<Int> {
         return checkedItemList.toList()
     }
 

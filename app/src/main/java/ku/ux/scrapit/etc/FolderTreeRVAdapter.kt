@@ -65,7 +65,7 @@ class FolderTreeRVAdapter(rootFolder : Folder) : RecyclerView.Adapter<FolderTree
                 && folderItemList[pos + removeNum].depth > folderItemList[pos].depth) {
                 removeNum++
             }
-            folderItemList.removeAll(folderItemList.subList(pos + 1, removeNum - 1).toSet())
+            folderItemList.removeAll(folderItemList.subList(pos + 1, pos + removeNum).toSet())
         } else {
             val end = folderItemList[pos].folder.childFolderList.size
             for (i in 1..end) {
@@ -75,12 +75,7 @@ class FolderTreeRVAdapter(rootFolder : Folder) : RecyclerView.Adapter<FolderTree
             }
         }
         folderItemList[pos].isOpen = !folderItemList[pos].isOpen
-        notifyItemChanged(pos)
-        Log.d("isoo", "itemClicked: ${folderItemList[pos].isOpen}")
-        if(folderItemList[pos].isOpen)
-            notifyItemRangeInserted(pos + 1, folderItemList[pos].folder.childFolderList.size)
-        else
-            notifyItemRangeRemoved(pos + 1, removeNum)
+        notifyDataSetChanged()
     }
 
 }

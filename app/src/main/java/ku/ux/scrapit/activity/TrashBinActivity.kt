@@ -34,7 +34,8 @@ class TrashBinActivity : AppCompatActivity() {
         setContentView(binding.root)
         getCurrent()
         binding.trashbinScrapRecyclerView.layoutManager = LinearLayoutManager(this)
-        binding.trashbinScrapRecyclerView.adapter = TrashBinRVAdapter(deletedScrapList, deletedFolderList)
+        trashbinadapter = TrashBinRVAdapter(deletedScrapList, deletedFolderList)
+        binding.trashbinScrapRecyclerView.adapter = trashbinadapter
 
         binding.trashbinDeleteBtn.setOnClickListener{
             trashbinadapter.deleteChecked()
