@@ -40,14 +40,14 @@ class ScrapITApplication : Application() {
         val rootFolderId = -1
         rootFolder = realm.where(Folder::class.java).equalTo("folderId", rootFolderId).findFirst() ?: Folder()
         if(rootFolder.nickname == "") {
-            rootFolder.nickname = "루트 폴더"
             realm.beginTransaction()
+            rootFolder.nickname = "루트 폴더"
             realm.copyToRealmOrUpdate(rootFolder)
             realm.commitTransaction()
         }
 
-//        testStackFragment()
-//        testDel()
+        testStackFragment()
+        //testDel()
     }
 
     private fun testFolderTree() {
@@ -78,16 +78,16 @@ class ScrapITApplication : Application() {
         // 폴더 생성 및 속성 설정
         val folder = Folder()
         folder.folderId = 1
-        folder.nickname = "폴더 1"
+        folder.nickname = "폴더 11"
         folder.description = "폴더 1의 설명"
-        folder.color = "#008000"
+        folder.color = "#88C8FF"
         folder.isFavorites = true
 
         // 폴더에 속한 스크랩 생성 및 속성 설정
         val scrap1 = Scrap()
         scrap1.scrapId = 1
         scrap1.nickname = "스크랩 1"
-        scrap1.url = "https://www.google.com"
+        scrap1.url = "https://translate.google.co.kr/"
         scrap1.description = "스크랩 1의 설명"
         scrap1.color = "#008000"
         scrap1.isFavorites = true
@@ -102,34 +102,67 @@ class ScrapITApplication : Application() {
 
         // 폴더 생성 및 속성 설정
         val folder2 = Folder()
-        folder.folderId = 2
-        folder.nickname = "폴더 1"
-        folder.description = "폴더 1의 설명"
-        folder.color = "#008000"
-        folder.isFavorites = true
+        folder2.folderId = 2
+        folder2.nickname = "폴더 22"
+        folder2.description = "폴더 2의 설명"
+        folder2.color = "#C1A5FF"
+        folder2.isFavorites = true
 
         // 폴더에 속한 스크랩 생성 및 속성 설정
         val scrap3 = Scrap()
-        scrap1.scrapId = 3
-        scrap1.nickname = "스크랩 1"
-        scrap1.url = "https://www.google.com"
-        scrap1.description = "스크랩 1의 설명"
-        scrap1.color = "#008000"
-        scrap1.isFavorites = true
+        scrap3.scrapId = 3
+        scrap3.nickname = "스크랩 1"
+        scrap3.url = "https://www.google.com"
+        scrap3.description = "스크랩 3의 설명"
+        scrap3.color = "#008000"
+        scrap3.isFavorites = true
 
         val scrap4 = Scrap()
-        scrap2.scrapId = 4
-        scrap2.nickname = "스크랩 2"
-        scrap2.url = "https://www.google.com"
-        scrap2.description = "스크랩 2의 설명"
-        scrap2.color = "#008000"
-        scrap2.isFavorites = true
+        scrap4.scrapId = 4
+        scrap4.nickname = "스크랩 2"
+        scrap4.url = "https://translate.google.co.kr/"
+        scrap4.description = "스크랩 4의 설명"
+        scrap4.color = "#008000"
+        scrap4.isFavorites = true
+
+        // 폴더 생성 및 속성 설정
+        val folder3 = Folder()
+        folder3.folderId = 3
+        folder3.nickname = "폴더 33"
+        folder3.description = "폴더 3의 설명"
+        folder3.color = "#C1A5FF"
+        folder3.isFavorites = false
+
+        // 폴더에 속한 스크랩 생성 및 속성 설정
+        val scrap5 = Scrap()
+        scrap5.scrapId = 5
+        scrap5.nickname = "스크랩 5"
+        scrap5.url = "https://translate.google.co.kr/"
+        scrap5.description = "스크랩 5의 설명"
+        scrap5.color = "#008000"
+        scrap5.isFavorites = true
+
+        val scrap6 = Scrap()
+        scrap6.scrapId = 6
+        scrap6.nickname = "스크랩 2"
+        scrap6.url = "https://translate.google.co.kr"
+        scrap6.description = "스크랩 6의 설명"
+        scrap6.color = "#008000"
+        scrap6.isFavorites = true
 
         // 폴더에 스크랩 추가
         folder.scrapList.add(scrap1)
         folder.scrapList.add(scrap2)
         folder2.scrapList.add(scrap3)
         folder2.scrapList.add(scrap4)
+        folder3.scrapList.add(scrap5)
+        folder3.scrapList.add(scrap6)
+
+        realm.beginTransaction()
+        rootFolder.childFolderList.add(folder)
+        rootFolder.childFolderList.add(folder2)
+        rootFolder.childFolderList.add(folder3)
+        realm.commitTransaction()
 
         // Realm 트랜잭션 시작
         realm.executeTransaction {
