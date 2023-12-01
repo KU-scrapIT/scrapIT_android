@@ -4,6 +4,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
@@ -12,7 +13,7 @@ import ku.ux.scrapit.activity.StackActivity
 import ku.ux.scrapit.data.Folder
 import ku.ux.scrapit.databinding.ItemStacksBinding
 
-class StackBtnAdapter(private val folderNames: List<String>) :
+class StackBtnAdapter(private val folderNames: List<String>, private val folderColors: List<String>) :
     RecyclerView.Adapter<StackBtnAdapter.ViewHolder>() {
 
     interface OnItemClickListener {
@@ -27,7 +28,7 @@ class StackBtnAdapter(private val folderNames: List<String>) :
 
     inner class ViewHolder(private val binding: ItemStacksBinding) : RecyclerView.ViewHolder(binding.root) {
         val folderTextView: TextView = binding.stackFoldersTv
-        val folderImageView: ImageView = binding.stackFoldersIb
+        val folderImageButton: ImageButton = binding.stackFoldersIb
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -37,10 +38,16 @@ class StackBtnAdapter(private val folderNames: List<String>) :
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        Log.d("isoo", "onBindViewHolder: $position")
         holder.folderTextView.text = folderNames[position]
 
-        holder.itemView.setOnClickListener {
+//        if (position == 0) {
+//            val shadowColor = android.graphics.Color.parseColor("#0000FF")
+//            holder.folderImageButton.setShadowLayer(10f, 0f, 0f, shadowColor)
+//        }
+
+        holder.folderImageButton.setColorFilter(android.graphics.Color.parseColor(folderColors[position]))
+
+        holder.folderImageButton.setOnClickListener {
             itemClickListener?.itemClicked(position)
         }
     }
