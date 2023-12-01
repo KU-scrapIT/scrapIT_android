@@ -408,6 +408,16 @@
                         app:iconTint="@color/bin_red"
                         app:iconPadding="15dp"
                         app:iconSize="27dp"/>
+                    
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/drawer_folder_tree_rv"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintStart_toStartOf="@id/drawer_all_scrap_btn"
+                        app:layout_constraintEnd_toEndOf="@id/drawer_all_scrap_btn"
+                        app:layout_constraintTop_toBottomOf="@id/drawer_trash_bin_btn"
+                        tools:listitem="@layout/item_folder_tree"
+                        tools:itemCount="3"/>
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 

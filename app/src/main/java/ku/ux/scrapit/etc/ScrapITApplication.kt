@@ -50,6 +50,10 @@ class ScrapITApplication : Application() {
 //        testDel()
     }
 
+    private fun testFolderTree() {
+
+    }
+
     private fun testDel() {
         // Realm 인스턴스 얻기
         val realm = Realm.getDefaultInstance()

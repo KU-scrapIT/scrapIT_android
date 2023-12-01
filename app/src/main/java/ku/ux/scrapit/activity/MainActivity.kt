@@ -21,7 +21,9 @@ import ku.ux.scrapit.data.Scrap
 import ku.ux.scrapit.databinding.ActivityMainBinding
 import ku.ux.scrapit.databinding.PopupKebabMenuBinding
 import ku.ux.scrapit.etc.FolderRVAdapter
+import ku.ux.scrapit.etc.FolderTreeRVAdapter
 import ku.ux.scrapit.etc.ScrapITApplication.Companion.currentFolderId
+import ku.ux.scrapit.etc.ScrapITApplication.Companion.rootFolder
 import ku.ux.scrapit.etc.ScrapRVAdapter
 
 class MainActivity : AppCompatActivity() {
@@ -60,6 +62,9 @@ class MainActivity : AppCompatActivity() {
 
         binding.mainFolderRecyclerView.layoutManager = LinearLayoutManager(this)
         binding.mainFolderRecyclerView.adapter = FolderRVAdapter(currentFolder.childFolderList)
+
+        binding.drawerFolderTreeRv.layoutManager = LinearLayoutManager(this)
+        binding.drawerFolderTreeRv.adapter = FolderTreeRVAdapter(rootFolder)
     }
 
     @SuppressLint("NotifyDataSetChanged")
