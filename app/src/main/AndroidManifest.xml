@@ -29,6 +29,8 @@
             android:exported="true"/>
         <activity android:name=".activity.StackActivity"
             android:exported="true"/>
+        <activity android:name=".activity.TrashBinActivity"
+            android:exported="true"/>
     </application>
 
 </manifest>
