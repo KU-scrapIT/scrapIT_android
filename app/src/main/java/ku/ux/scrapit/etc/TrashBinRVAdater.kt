@@ -112,8 +112,29 @@ class TrashBinRVAdapter(private val scrapList: MutableList<Scrap>,
 //        notifyDataSetChanged()
     }
 
+    fun trashbinRestore(){
+        val realm = Realm.getDefaultInstance()
+        realm.beginTransaction()
+        val restoreFolder = checkedFolderList
+        for( it in restoreFolder){
+            val desiredFolder = realm.where(Folder::class.java).equalTo("folderId", it).findFirst()
+            desiredFolder?.isDeleted = false
+        }
+        val restoreScrap = checkedScrapList
+        for( it in restoreScrap){
+            val desiredScrap = realm.where(Scrap::class.java).equalTo("scrapId", it).findFirst()
+            desiredScrap?.isDeleted = false
+        }
+        realm.commitTransaction()
+        realm.close()
+        checkedFolderList.clear()
+        checkedScrapList.clear()
+        notifyDataSetChanged()
+    }
+
     fun deleteChecked() {   //  체크된거 삭제
         val deleteFolder = checkedFolderList
+        Log.d("tintin", "deleteFolder: ${deleteFolder.size}")
         val realm = Realm.getDefaultInstance()
         realm.beginTransaction()
         for(it in deleteFolder){
@@ -128,6 +149,7 @@ class TrashBinRVAdapter(private val scrapList: MutableList<Scrap>,
         checkedFolderList.clear()
 
         val deleteScrap = checkedScrapList
+        Log.d("tintin", "deleteFolder: ${deleteScrap.size}")
         for(it in deleteScrap){
             val scrapToDelete = realm.where(Scrap::class.java)
                 .equalTo("scrapId", it) // 삭제할 조건 지정

@@ -44,18 +44,19 @@ class TrashBinActivity : AppCompatActivity() {
         binding.trashbinClearBtn.setOnClickListener{
             //모두 선택 이후 delete
             trashbinadapter.selectAll()
-
             trashbinadapter.deleteChecked()
 
         }
         binding.trashbinRestoreBtn.setOnClickListener{
-
+            trashbinadapter.trashbinRestore()
         }
 
         binding.trashbinBackToMainBtn.setOnClickListener{
             finish()
         }
     }
+
+
 
     private fun getCurrent() {
         val realm = Realm.getDefaultInstance()
