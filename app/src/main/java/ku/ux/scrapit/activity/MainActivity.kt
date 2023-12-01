@@ -5,18 +5,13 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.LinearInterpolator
 import android.widget.PopupWindow
-import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.view.GravityCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import io.realm.Realm
-import ku.ux.scrapit.R
 import ku.ux.scrapit.data.Folder
-import ku.ux.scrapit.data.IndexColor
 import ku.ux.scrapit.data.Scrap
 import ku.ux.scrapit.databinding.ActivityMainBinding
 import ku.ux.scrapit.databinding.PopupKebabMenuBinding
@@ -30,6 +25,8 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding : ActivityMainBinding
     private lateinit var currentFolder : Folder
+
+    private var mode = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         
@@ -72,6 +69,23 @@ class MainActivity : AppCompatActivity() {
 
         binding.drawerFolderTreeRv.layoutManager = LinearLayoutManager(this)
         binding.drawerFolderTreeRv.adapter = FolderTreeRVAdapter(rootFolder)
+
+        (binding.mainScrapRecyclerView.adapter as ScrapRVAdapter).setOnClickListener(object : ScrapRVAdapter.OnClickListener {
+            override fun onClick(pos: Int) {
+                val intent = Intent(this@MainActivity, StackActivity::class.java)
+                intent.putExtra("folderId", currentFolderId)
+                intent.putExtra("index", pos)
+                startActivity(intent)
+            }
+        })
+
+        (binding.mainFolderRecyclerView.adapter as FolderRVAdapter).setOnClickListener(object : FolderRVAdapter.OnClickListener {
+            override fun onClick(folderId: Int) {
+                val intent = Intent(this@MainActivity, MainActivity::class.java)
+                currentFolderId = folderId
+                startActivity(intent)
+            }
+        })
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -115,11 +129,14 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        //super.onBackPressed()
-        endEditMode()
+        if(mode == 1)
+            endEditMode()
+        else
+            super.onBackPressed()
     }
 
     private fun startEditMode() {
+        mode = 1
         binding.mainMenuBtn.visibility = View.INVISIBLE
         binding.mainFolderTitleTv.visibility = View.INVISIBLE
         binding.mainSearchBtn.visibility = View.INVISIBLE
@@ -131,7 +148,6 @@ class MainActivity : AppCompatActivity() {
         (binding.mainScrapRecyclerView.adapter as ScrapRVAdapter).turnOnEditMode()
         (binding.mainFolderRecyclerView.adapter as FolderRVAdapter).turnOnEditMode()
 
-        binding.mainEditBtn.setOnClickListener {}
         binding.mainCheckAllCb.setOnCheckedChangeListener { _, b ->
             (binding.mainScrapRecyclerView.adapter as ScrapRVAdapter).isCheckAllItem(b)
             (binding.mainFolderRecyclerView.adapter as FolderRVAdapter).isCheckAllItem(b)
@@ -139,6 +155,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun endEditMode() {
+        mode = 0
         binding.mainMenuBtn.visibility = View.VISIBLE
         binding.mainFolderTitleTv.visibility = View.VISIBLE
         binding.mainSearchBtn.visibility = View.VISIBLE
@@ -163,8 +180,6 @@ class MainActivity : AppCompatActivity() {
             val scrapList = (binding.mainScrapRecyclerView.adapter as ScrapRVAdapter).getCheckedScraps()
             val folderList = (binding.mainFolderRecyclerView.adapter as FolderRVAdapter).getCheckedFolders()
             edit(scrapList, folderList)
-            (binding.mainScrapRecyclerView.adapter as ScrapRVAdapter).notifyDataSetChanged()
-            (binding.mainFolderRecyclerView.adapter as FolderRVAdapter).notifyDataSetChanged()
         }
         binding.mainFavoritesBtn.setOnClickListener {
             val scrapList = (binding.mainScrapRecyclerView.adapter as ScrapRVAdapter).getCheckedScraps()
@@ -187,6 +202,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun edit(scrapList : List<Int>, folderList : List<Int>) {
+        Log.d("isoo", "edit: ${scrapList.size}, ${folderList.size}")
         if(scrapList.size + folderList.size > 1) return
         if(scrapList.isNotEmpty()) {
             val intent = Intent(this, AddNewItemActivity::class.java)

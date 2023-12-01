@@ -28,8 +28,8 @@ class ScrapITApplication : Application() {
             return newFolderIdCounter
         }
         fun generateNewIScrapId(context : Context): Int {
-            saveIdCounters(context)
             newScrapIdCounter += 1
+            saveIdCounters(context)
             return newScrapIdCounter
         }
         private fun saveIdCounters(context : Context) {
@@ -65,7 +65,7 @@ class ScrapITApplication : Application() {
             realm.commitTransaction()
         }
 
-        testStackFragment()
+        //testStackFragment()
         //testDel()
     }
 

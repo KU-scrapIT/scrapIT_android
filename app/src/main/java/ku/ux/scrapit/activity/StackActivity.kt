@@ -9,7 +9,9 @@ import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.view.WindowManager
+import android.webkit.WebResourceRequest
 import android.webkit.WebView
+import android.webkit.WebViewClient
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -63,14 +65,20 @@ class StackActivity : AppCompatActivity() {
 
         // 최근폴더에 들어갈 폴더 초기화
 //        나중에 수정해주기!!!
-        recentFolderId = 3
-        recentPosition = 1
-        currentFolderId = recentFolderId
+//        recentFolderId = 3
+//        recentPosition = 1
+//        currentFolderId = recentFolderId
 
         // 폴더 이름 데이터 생성
 //        val folderNames = listOf("폴더 1", "폴더 2", "폴더 3", "폴더 4")
 
         // 웹뷰 세팅
+        currentFolderId = intent.getIntExtra("folderId", -1)
+        recentFolderId = currentFolderId
+        recentPosition = intent.getIntExtra("index", 0)
+        val realm = Realm.getDefaultInstance()
+        val currentFolder = realm.where(Folder::class.java).equalTo("folderId", currentFolderId).findFirst()
+        urlList = currentFolder!!.scrapList.flatMap { listOf(it.url) }
         setViewPager(urlList, 0)
 
 
@@ -307,5 +315,9 @@ class StackActivity : AppCompatActivity() {
                 setViewPager(targetFolderUrls, 0)
             }
         })
+    }
+
+    override fun onBackPressed() {
+        //super.onBackPressed()
     }
 }
