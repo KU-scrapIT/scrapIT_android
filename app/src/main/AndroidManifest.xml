@@ -32,6 +32,8 @@
             android:exported="true"/>
         <activity android:name=".activity.TrashBinActivity"
             android:exported="true"/>
+        <activity android:name=".activity.AllScrapActivity"
+            android:exported="true"/>
     </application>
 
 </manifest>

@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupWindow
 import androidx.core.view.GravityCompat
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import io.realm.Realm
 import ku.ux.scrapit.data.Folder
@@ -17,10 +18,13 @@ import ku.ux.scrapit.databinding.ActivityMainBinding
 import ku.ux.scrapit.databinding.PopupKebabMenuBinding
 import ku.ux.scrapit.etc.FolderRVAdapter
 import ku.ux.scrapit.etc.FolderTreeRVAdapter
+import ku.ux.scrapit.etc.ItemTouchCallback
 import ku.ux.scrapit.etc.ScrapITApplication.Companion.currentFolderId
 import ku.ux.scrapit.etc.ScrapITApplication.Companion.favoritesFolderId
 import ku.ux.scrapit.etc.ScrapITApplication.Companion.rootFolder
 import ku.ux.scrapit.etc.ScrapRVAdapter
+import java.nio.file.Files.delete
+import java.nio.file.Files.move
 
 class MainActivity : AppCompatActivity() {
 
@@ -47,6 +51,10 @@ class MainActivity : AppCompatActivity() {
         binding.drawerBackBtn.setOnClickListener {
             binding.mainDrawer.closeDrawer(GravityCompat.START)
         }
+        binding.drawerAllScrapBtn.setOnClickListener {
+            val intent = Intent(this@MainActivity, AllScrapActivity::class.java)
+            startActivity(intent)
+        }
         binding.drawerFavoritesBtn.setOnClickListener {
             val intent = Intent(this@MainActivity, MainActivity::class.java)
             currentFolderId = favoritesFolderId
@@ -54,7 +62,7 @@ class MainActivity : AppCompatActivity() {
         }
         binding.drawerTrashBinBtn.setOnClickListener {
             val intent = Intent(this, TrashBinActivity::class.java)
-            startActivity(intent)
+            startActivityForResult(intent, 100)
         }
         binding.mainAddScrapBtn.setOnClickListener {
             val intent = Intent(this, AddNewItemActivity::class.java)
@@ -67,21 +75,34 @@ class MainActivity : AppCompatActivity() {
 
         initEditModeBar()
 
+        val scrapRvAdapter = ScrapRVAdapter(currentFolder.scrapList)
         binding.mainScrapRecyclerView.layoutManager = LinearLayoutManager(this)
-        binding.mainScrapRecyclerView.adapter = ScrapRVAdapter(currentFolder.scrapList)
+        binding.mainScrapRecyclerView.adapter = scrapRvAdapter
+        val itemTouchHelper = ItemTouchHelper(ItemTouchCallback(scrapRvAdapter))
+        itemTouchHelper.attachToRecyclerView(binding.mainScrapRecyclerView)
 
+        val folderRVAdapter = FolderRVAdapter(currentFolder.childFolderList)
         binding.mainFolderRecyclerView.layoutManager = LinearLayoutManager(this)
-        binding.mainFolderRecyclerView.adapter = FolderRVAdapter(currentFolder.childFolderList)
+        binding.mainFolderRecyclerView.adapter = folderRVAdapter
+        val itemTouchHelper2 = ItemTouchHelper(ItemTouchCallback(folderRVAdapter))
+        itemTouchHelper2.attachToRecyclerView(binding.mainFolderRecyclerView)
 
         binding.drawerFolderTreeRv.layoutManager = LinearLayoutManager(this)
         binding.drawerFolderTreeRv.adapter = FolderTreeRVAdapter(rootFolder)
+        (binding.drawerFolderTreeRv.adapter as FolderTreeRVAdapter).setOnItemClickedListener(object : FolderTreeRVAdapter.OnItemClickedListener {
+            override fun itemClicked(folder: Folder) {
+                val intent = Intent(this@MainActivity, MainActivity::class.java)
+                currentFolderId = folder.folderId
+                startActivity(intent)
+            }
+        })
 
         (binding.mainScrapRecyclerView.adapter as ScrapRVAdapter).setOnClickListener(object : ScrapRVAdapter.OnClickListener {
             override fun onClick(pos: Int) {
                 val intent = Intent(this@MainActivity, StackActivity::class.java)
                 intent.putExtra("folderId", currentFolderId)
                 intent.putExtra("index", pos)
-                startActivity(intent)
+                startActivityForResult(intent, 100)
             }
         })
 
@@ -99,6 +120,10 @@ class MainActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if(resultCode == RESULT_OK) {
+            binding.mainDrawer.closeDrawer(GravityCompat.START)
+            endEditMode()
+            (binding.mainScrapRecyclerView.adapter as ScrapRVAdapter).updateList()
+            (binding.mainFolderRecyclerView.adapter as FolderRVAdapter).updateList()
             binding.mainScrapRecyclerView.adapter?.notifyDataSetChanged()
             binding.mainFolderRecyclerView.adapter?.notifyDataSetChanged()
         }
@@ -198,6 +223,8 @@ class MainActivity : AppCompatActivity() {
             val scrapList = (binding.mainScrapRecyclerView.adapter as ScrapRVAdapter).getCheckedScraps()
             val folderList = (binding.mainFolderRecyclerView.adapter as FolderRVAdapter).getCheckedFolders()
             delete(scrapList, folderList)
+            (binding.mainScrapRecyclerView.adapter as ScrapRVAdapter).updateList()
+            (binding.mainFolderRecyclerView.adapter as FolderRVAdapter).updateList()
             (binding.mainScrapRecyclerView.adapter as ScrapRVAdapter).notifyDataSetChanged()
             (binding.mainFolderRecyclerView.adapter as FolderRVAdapter).notifyDataSetChanged()
         }

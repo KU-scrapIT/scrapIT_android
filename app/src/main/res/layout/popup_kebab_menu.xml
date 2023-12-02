@@ -8,38 +8,41 @@
 
     <Button
         android:id="@+id/kebab_edit_menu"
-        android:layout_width="123dp"
+        android:layout_width="133dp"
         android:layout_height="40dp"
         style="@style/Widget.AppCompat.Button.Borderless"
         android:text="@string/edit"
         android:textColor="@color/black"
-        android:textSize="13dp"
-        android:gravity="left"
+        android:textSize="15dp"
+        android:gravity="left|center"
         android:paddingLeft="10dp"
-        android:fontFamily="@font/pretendard_regular"/>
+        android:fontFamily="@font/pretendard_regular"
+        android:layout_margin="5dp"/>
 
     <Button
         android:id="@+id/kebab_add_folder_menu"
-        android:layout_width="123dp"
+        android:layout_width="133dp"
         android:layout_height="40dp"
         style="@style/Widget.AppCompat.Button.Borderless"
         android:text="@string/add_folder"
         android:textColor="@color/black"
-        android:textSize="13dp"
-        android:gravity="left"
+        android:textSize="15dp"
+        android:gravity="left|center"
         android:paddingLeft="10dp"
-        android:fontFamily="@font/pretendard_regular"/>
+        android:fontFamily="@font/pretendard_regular"
+        android:layout_margin="5dp"/>
 
     <Button
         android:id="@+id/kebab_see_local_file_menu"
-        android:layout_width="123dp"
+        android:layout_width="133dp"
         android:layout_height="40dp"
         style="@style/Widget.AppCompat.Button.Borderless"
         android:text="@string/see_local_save"
         android:textColor="@color/black"
-        android:textSize="13dp"
-        android:gravity="left"
+        android:textSize="15dp"
+        android:gravity="left|center"
         android:paddingLeft="10dp"
-        android:fontFamily="@font/pretendard_regular"/>
+        android:fontFamily="@font/pretendard_regular"
+        android:layout_margin="5dp"/>
 
 </GridLayout>

@@ -4,6 +4,7 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/white"
         tools:context=".activity.MainActivity">
 
         <androidx.drawerlayout.widget.DrawerLayout
@@ -161,7 +162,7 @@
                 <GridLayout
                     android:id="@+id/main_edit_bar"
                     android:layout_width="match_parent"
-                    android:layout_height="70dp"
+                    android:layout_height="90dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -172,6 +173,7 @@
                     android:background="@color/white">
 
                     <LinearLayout
+                        android:layout_marginTop="20dp"
                         android:orientation="vertical"
                         android:layout_columnWeight="1"
                         android:gravity="center">
@@ -192,28 +194,30 @@
                             android:fontFamily="@font/pretendard_semi_bold"/>
                     </LinearLayout>
 
-                    <LinearLayout
-                        android:orientation="vertical"
-                        android:layout_columnWeight="1"
-                        android:gravity="center">
-                        <ImageButton
-                            android:id="@+id/main_copy_btn"
-                            android:layout_width="25dp"
-                            android:layout_height="25dp"
-                            android:src="@drawable/ic_copy"
-                            android:scaleType="fitCenter"
-                            android:background="@color/transparent"/>
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="@string/copy"
-                            android:textSize="10dp"
-                            android:textAlignment="center"
-                            android:textColor="@color/grey_icon"
-                            android:fontFamily="@font/pretendard_semi_bold"/>
-                    </LinearLayout>
+<!--                    <LinearLayout-->
+<!--                        android:layout_marginTop="20dp"-->
+<!--                        android:orientation="vertical"-->
+<!--                        android:layout_columnWeight="1"-->
+<!--                        android:gravity="center">-->
+<!--                        <ImageButton-->
+<!--                            android:id="@+id/main_copy_btn"-->
+<!--                            android:layout_width="25dp"-->
+<!--                            android:layout_height="25dp"-->
+<!--                            android:src="@drawable/ic_copy"-->
+<!--                            android:scaleType="fitCenter"-->
+<!--                            android:background="@color/transparent"/>-->
+<!--                        <TextView-->
+<!--                            android:layout_width="match_parent"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:text="@string/copy"-->
+<!--                            android:textSize="10dp"-->
+<!--                            android:textAlignment="center"-->
+<!--                            android:textColor="@color/grey_icon"-->
+<!--                            android:fontFamily="@font/pretendard_semi_bold"/>-->
+<!--                    </LinearLayout>-->
 
                     <LinearLayout
+                        android:layout_marginTop="20dp"
                         android:orientation="vertical"
                         android:layout_columnWeight="1"
                         android:gravity="center">
@@ -235,6 +239,7 @@
                     </LinearLayout>
 
                     <LinearLayout
+                        android:layout_marginTop="20dp"
                         android:orientation="vertical"
                         android:layout_columnWeight="1"
                         android:gravity="center">
@@ -256,6 +261,7 @@
                     </LinearLayout>
 
                     <LinearLayout
+                        android:layout_marginTop="20dp"
                         android:orientation="vertical"
                         android:layout_columnWeight="1"
                         android:gravity="center">
@@ -277,6 +283,7 @@
                     </LinearLayout>
 
                     <LinearLayout
+                        android:layout_marginTop="20dp"
                         android:orientation="vertical"
                         android:layout_columnWeight="1"
                         android:gravity="center">

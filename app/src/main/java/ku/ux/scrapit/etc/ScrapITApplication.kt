@@ -3,6 +3,7 @@ package ku.ux.scrapit.etc
 import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Context
+import android.util.Log
 import io.realm.Realm
 import io.realm.RealmConfiguration
 import ku.ux.scrapit.data.Folder
@@ -38,8 +39,9 @@ class ScrapITApplication : Application() {
 
         private fun saveIdCounters(context: Context) {
             val pref = context.getSharedPreferences("storage", Context.MODE_PRIVATE)
-            pref.edit().putInt("folderId", newFolderIdCounter)
-            pref.edit().putInt("scrapId", newScrapIdCounter)
+            pref.edit().putInt("folderId", newFolderIdCounter).apply()
+            pref.edit().putInt("scrapId", newScrapIdCounter).apply()
+            Log.d("isoo", "save: $newScrapIdCounter, $newFolderIdCounter")
         }
     }
 
@@ -58,6 +60,7 @@ class ScrapITApplication : Application() {
         currentFolderId = pref.getInt("currentFolderId", -1)
         newScrapIdCounter = pref.getInt("scrapId", 0)
         newFolderIdCounter = pref.getInt("folderId", 0)
+        Log.d("isoo", "onCreate: $newScrapIdCounter, $newFolderIdCounter")
 
         val realm = Realm.getDefaultInstance()
         val rootFolderId = -1
@@ -73,6 +76,7 @@ class ScrapITApplication : Application() {
         val favoritesFolder = Folder()
         favoritesFolder.folderId = favoritesFolderId
         favoritesFolder.nickname = "즐겨찾기"
+        favoritesFolder.isDeleted = false
         favoritesFolder.childFolderList.addAll(realm.where(Folder::class.java).equalTo("isFavorites", true).findAll())
         favoritesFolder.scrapList.addAll(realm.where(Scrap::class.java).equalTo("isFavorites", true).findAll())
         realm.beginTransaction()

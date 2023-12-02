@@ -24,9 +24,10 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_weight="1"
-        android:text="휴지통"
-        android:textSize="20dp"
-        android:textStyle="bold"
+        android:text="@string/trash_bin"
+        android:textSize="19dp"
+        android:textColor="@color/black"
+        android:fontFamily="@font/pretendard_bold"
         app:layout_constraintBottom_toBottomOf="@+id/trashbin_back_to_main_btn"
         app:layout_constraintTop_toTopOf="@+id/trashbin_back_to_main_btn"
         app:layout_constraintStart_toEndOf="@id/trashbin_back_to_main_btn"
@@ -34,7 +35,7 @@
 
     <Button
         android:id="@+id/trashbin_clear_btn"
-        android:layout_width="50dp"
+        android:layout_width="70dp"
         android:layout_height="35dp"
         android:backgroundTint="@color/bin_red"
         android:text="비우기"

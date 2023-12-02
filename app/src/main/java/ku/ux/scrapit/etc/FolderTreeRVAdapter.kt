@@ -29,6 +29,16 @@ class FolderTreeRVAdapter(rootFolder : Folder) : RecyclerView.Adapter<FolderTree
         folderItemList.add(FolderItem(rootFolder, 0, false))
     }
 
+    interface OnItemClickedListener {
+        fun itemClicked(folder : Folder)
+    }
+
+    private var onItemClickedListener : OnItemClickedListener? = null
+
+    fun setOnItemClickedListener(listener : OnItemClickedListener) {
+        onItemClickedListener = listener
+    }
+
     inner class ViewHolder(private val binding : ItemFolderTreeBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(pos : Int) {
             val folderItem = folderItemList[pos]
@@ -43,6 +53,9 @@ class FolderTreeRVAdapter(rootFolder : Folder) : RecyclerView.Adapter<FolderTree
             binding.itemFolderTreeBtn.layoutParams = layoutParams
 
             binding.itemFolderTreeBtn.setOnClickListener {
+                onItemClickedListener?.itemClicked(folderItem.folder)
+            }
+            binding.itemFolderTreeArrow.setOnClickListener {
                 itemClicked(pos)
             }
 

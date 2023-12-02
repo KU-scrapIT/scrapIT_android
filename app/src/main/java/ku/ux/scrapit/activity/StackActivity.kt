@@ -1,6 +1,7 @@
 package ku.ux.scrapit.activity
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -55,6 +56,7 @@ class StackActivity : AppCompatActivity() {
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setResult(Activity.RESULT_OK, null)
         binding = ActivityStackBinding.inflate(layoutInflater)
         setContentView(binding.root)
 

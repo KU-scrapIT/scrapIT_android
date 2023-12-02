@@ -6,27 +6,27 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
+import io.realm.Realm
 import io.realm.RealmList
 import ku.ux.scrapit.data.Scrap
 import ku.ux.scrapit.databinding.ItemScrapBinding
 import kotlin.math.log
 
-class ScrapRVAdapter(list : RealmList<Scrap>) : RecyclerView.Adapter<ScrapRVAdapter.ViewHolder>() {
+class ScrapRVAdapter(val list : MutableList<Scrap>) : RecyclerView.Adapter<ScrapRVAdapter.ViewHolder>(), ItemTouchHelperListener {
 
-    private val scrapList = list
+    private val scrapList = ArrayList<Scrap>()
     private var isEditMode = false
     private var isAllChecked = false
     private val checkedItemList = HashSet<Int>()
 
     init {
-        val removeList = ArrayList<Scrap>()
-        for(scrap in scrapList) {
-            if(scrap.isDeleted) {
-                removeList.add(scrap)
+        for(scrap in list) {
+            if(!scrap.isDeleted) {
+                scrapList.add(scrap)
             }
         }
-        scrapList.removeAll(removeList.toSet())
     }
 
     interface OnClickListener {
@@ -110,8 +110,27 @@ class ScrapRVAdapter(list : RealmList<Scrap>) : RecyclerView.Adapter<ScrapRVAdap
         notifyDataSetChanged()
     }
 
+    fun updateList() {
+        scrapList.clear()
+        for(scrap in list) {
+            if(!scrap.isDeleted) {
+                scrapList.add(scrap)
+            }
+        }
+    }
+
     fun getCheckedScraps() : List<Int> {
         return checkedItemList.toList()
+    }
+
+    override fun onItemMove(from: Int, to: Int) {
+        val realm = Realm.getDefaultInstance()
+        realm.beginTransaction()
+        val item: Scrap = list[from]
+        list.removeAt(from)
+        list.add(to, item)
+        realm.commitTransaction()
+        notifyItemMoved(from, to)
     }
 
 }

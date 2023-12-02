@@ -1,5 +1,6 @@
 package ku.ux.scrapit.activity
 
+import android.app.Activity
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -45,7 +46,6 @@ class TrashBinActivity : AppCompatActivity() {
             //모두 선택 이후 delete
             trashbinadapter.selectAll()
             trashbinadapter.deleteChecked()
-
         }
         binding.trashbinRestoreBtn.setOnClickListener{
             trashbinadapter.trashbinRestore()
@@ -54,8 +54,9 @@ class TrashBinActivity : AppCompatActivity() {
         binding.trashbinBackToMainBtn.setOnClickListener{
             finish()
         }
-    }
 
+        setResult(Activity.RESULT_OK, null)
+    }
 
 
     private fun getCurrent() {

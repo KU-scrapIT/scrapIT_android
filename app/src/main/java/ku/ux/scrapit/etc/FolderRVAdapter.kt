@@ -7,26 +7,25 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import io.realm.Realm
 import io.realm.RealmList
 import ku.ux.scrapit.data.Folder
 import ku.ux.scrapit.data.Scrap
 import ku.ux.scrapit.databinding.ItemFolderBinding
 
-class FolderRVAdapter(list : RealmList<Folder>) : RecyclerView.Adapter<FolderRVAdapter.ViewHolder>() {
+class FolderRVAdapter(val list : MutableList<Folder>) : RecyclerView.Adapter<FolderRVAdapter.ViewHolder>(), ItemTouchHelperListener {
 
-    private val folderList = list
+    private val folderList = ArrayList<Folder>()
     private var isEditMode = false
     private var isAllChecked = false
     private val checkedItemList = HashSet<Int>()
 
     init {
-        val removeList = ArrayList<Folder>()
-        for(folder in folderList) {
-            if(folder.isDeleted) {
-                removeList.add(folder)
+        for(folder in list) {
+            if(!folder.isDeleted) {
+                folderList.add(folder)
             }
         }
-        folderList.removeAll(removeList.toSet())
     }
 
     interface OnClickListener {
@@ -94,6 +93,15 @@ class FolderRVAdapter(list : RealmList<Folder>) : RecyclerView.Adapter<FolderRVA
         notifyDataSetChanged()
     }
 
+    fun updateList() {
+        folderList.clear()
+        for(folder in list) {
+            if(!folder.isDeleted) {
+                folderList.add(folder)
+            }
+        }
+    }
+
     fun isCheckAllItem(isCheck : Boolean) {
         isAllChecked = isCheck
         checkedItemList.clear()
@@ -107,6 +115,16 @@ class FolderRVAdapter(list : RealmList<Folder>) : RecyclerView.Adapter<FolderRVA
 
     fun getCheckedFolders() : List<Int> {
         return checkedItemList.toList()
+    }
+
+    override fun onItemMove(from: Int, to: Int) {
+        val realm = Realm.getDefaultInstance()
+        realm.beginTransaction()
+        val item: Folder = list[from]
+        list.removeAt(from)
+        list.add(to, item)
+        realm.commitTransaction()
+        notifyItemMoved(from, to)
     }
 
 }

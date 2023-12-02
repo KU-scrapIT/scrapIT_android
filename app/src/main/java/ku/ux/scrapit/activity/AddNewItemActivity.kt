@@ -34,7 +34,7 @@ class AddNewItemActivity : AppCompatActivity(){
 
     private var folder = Folder()
     private var scrap = Scrap()
-    private lateinit var checkedColor : String
+    private var checkedColor : String = IndexColor.RED.colorCode
     private lateinit var realm: Realm
     private lateinit var binding : ActivityAddnewitemBinding
     private lateinit var parentFolder: Folder
@@ -149,10 +149,10 @@ class AddNewItemActivity : AppCompatActivity(){
 //                    val curColor = cur_color.toColor()
                     checkedColor = String.format("#%06X", 0xFFFFFF and curColor)
                     // Toast 메시지로 현재 색상을 표시
-                    Toast.makeText(this, "현재 색상: $checkedColor", Toast.LENGTH_SHORT).show()
+                    //Toast.makeText(this, "현재 색상: $checkedColor", Toast.LENGTH_SHORT).show()
                 } else {
                     // backgroundTintList가 null인 경우에 대한 처리
-                    Toast.makeText(this, "색상 정보를 가져올 수 없습니다.", Toast.LENGTH_SHORT).show()
+                    //Toast.makeText(this, "색상 정보를 가져올 수 없습니다.", Toast.LENGTH_SHORT).show()
                 }
             }
         }

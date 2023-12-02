@@ -61,7 +61,8 @@ class TrashBinRVAdapter(private val scrapList: MutableList<Scrap>,
     inner class ScrapViewHolder(private val binding : ItemScrapBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(pos : Int) {
 
-            val scrap = scrapList[pos]
+            val scrap = scrapList[pos - folderList.size]
+            Log.d("isoo", "bind: ${scrap.nickname}")
             //삭제 체크된것만 나타내기
             if(scrap!!.isDeleted) binding.root.visibility = View.VISIBLE
             else binding.root.visibility = View.GONE
@@ -191,7 +192,7 @@ class TrashBinRVAdapter(private val scrapList: MutableList<Scrap>,
         }
     }
 
-    override fun getItemCount() : Int = scrapList.size + folderList.size
+    override fun getItemCount() : Int = scrapList.size + folderList.size - 1
 
     override fun getItemViewType(position: Int): Int {
         return if (position < folderList.size) {
@@ -200,4 +201,5 @@ class TrashBinRVAdapter(private val scrapList: MutableList<Scrap>,
             VIEW_TYPE_SCRAP
         }
     }
+
 }
